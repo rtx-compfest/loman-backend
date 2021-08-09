@@ -1,8 +1,8 @@
-const app = require("../App/App");
+const app = require("../App/App")
+const { db } = require("../Database")
 
+const port = process.env.PORT || 1000
 
-const port = process.env.PORT || 1000;
-
-app.listen(port, () => {
-  console.log(`REST at http://localhost:${port}`);
-});
+app.listen(port, async () => {
+  console.log(`REST at http://localhost:${port}`)
+})

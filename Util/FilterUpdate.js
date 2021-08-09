@@ -1,10 +1,12 @@
+const FilterBody = require("./FilterBody")
+
 class FilterUpdate {
-  constructor(filters, pgp) {
+  constructor(filters, pgp, filterColumns = []) {
     if (!pgp || !filters || typeof filters !== "object") {
       throw new TypeError("Parameter 'filters' must be an object.")
     }
     this.pgp = pgp
-    this.filters = filters
+    this.filters = FilterBody(filters, filterColumns)
     this.rawType = true // do not escape the result from toPostgres()
   }
 

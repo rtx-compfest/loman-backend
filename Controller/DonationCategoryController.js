@@ -9,6 +9,7 @@ router.get("/", async function (req, res) {
     status: true,
   })
 })
+
 router.get("/:id", async function (req, res) {
   let id = req.params.id
   let data = await db.donationCategory.get(id)

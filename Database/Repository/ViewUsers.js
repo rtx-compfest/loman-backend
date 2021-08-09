@@ -1,3 +1,4 @@
+const FilterBody = require("../../Util/FilterBody")
 const FilterUpdate = require("../../Util/FilterUpdate")
 class ViewUsers {
   constructor(db, pgp) {

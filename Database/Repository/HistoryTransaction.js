@@ -1,12 +1,23 @@
+const FilterBody = require("../../Util/FilterBody")
 const FilterUpdate = require("../../Util/FilterUpdate")
 class HistoryTransaction {
   constructor(db, pgp) {
     this.db = db
     this.pgp = pgp
     this.tableName = "history_transaction"
+    this.allowedColumns = [
+      "transaction_date",
+      "debit",
+      "credit",
+      "user_id",
+      "donation_id",
+      "status_transaction",
+      "notes",
+    ]
   }
 
   async add(values) {
+    values = FilterBody(values, this.allowedColumns)
     return this.db.one(
       "INSERT INTO public." +
         this.tableName +
@@ -16,7 +27,7 @@ class HistoryTransaction {
   }
 
   async update(values) {
-    let body = new FilterUpdate(values, this.pgp)
+    let body = new FilterUpdate(values, this.pgp, this.allowedColumns)
     return this.db.one("UPDATE public.$1:name set $2 WHERE id=$3 RETURNING *", [
       this.tableName,
       body,

@@ -7,7 +7,7 @@ const {
   DonationCategory,
   HistoryTransaction,
 } = require("./Repository")
-
+require("dotenv").config()
 const initOptions = {
   promiseLib: promise,
 
@@ -19,13 +19,9 @@ const initOptions = {
     obj.historyTransaction = new HistoryTransaction(obj, pgp)
   },
 }
-
 // Initializing the library:
 const pgp = pgPromise(initOptions)
-
-const connectionString =
-  "postgres://cguirnsrgetxsr:a20e4429136a72fb84d59faa7fb855e45fef0a4c1f0e898a053b1c2961264878@ec2-34-194-14-176.compute-1.amazonaws.com:5432/d9sajc2rtcnm51"
-
+const connectionString = process.env.CONNECTION_STRING || ""
 const config = {
   connectionString: connectionString,
   ssl: { rejectUnauthorized: false },

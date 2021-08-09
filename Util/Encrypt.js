@@ -1,7 +1,7 @@
 const crypto = require("crypto")
-
-var key = "64236048446209138083932519690585"
-var iva = Buffer.from("7c598e5fd9f361adf1827073dc0ca322", "hex")
+require("dotenv").config()
+var key = process.env.PUBLIC_KEY_ENCRYPT
+var iva = Buffer.from(process.env.PRIVATE_KEY_ENCRYPT, "hex")
 
 function encrypt(text) {
   let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iva)

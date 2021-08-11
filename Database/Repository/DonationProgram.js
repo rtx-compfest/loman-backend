@@ -25,7 +25,7 @@ class DonationProgram {
       "INSERT INTO public." +
         this.tableName +
         "(${this:name}) VALUES (${this:csv}) RETURNING *;",
-      { values }
+      values
     )
   }
 

@@ -6,9 +6,11 @@ const Middleware = require("../Middleware/Middleware")
 const Route = require("../Routes/Routes")
 const Cors = require("cors")
 const { handleError } = require("../Util/ErrorHandler")
+const morgan = require('morgan')
 
 app.use(cmpression())
 app.use(Cors())
+app.use(morgan('tiny'))
 
 //Body Parser
 app.use(express.json())

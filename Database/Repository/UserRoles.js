@@ -35,7 +35,7 @@ class UserRoles {
   }
 
   async find(id) {
-    return this.db.oneOrNone("select * from ${tableName:name} WHERE id={id}", {
+    return this.db.oneOrNone("select * from ${tableName:name} WHERE id=${id}", {
       tableName: this.tableName,
       id: id,
     })

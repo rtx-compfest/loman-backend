@@ -6,11 +6,11 @@ const Middleware = require("../Middleware/Middleware")
 const Route = require("../Routes/Routes")
 const Cors = require("cors")
 const { handleError } = require("../Util/ErrorHandler")
-const morgan = require('morgan')
+const morgan = require("morgan")
 
 app.use(cmpression())
 app.use(Cors())
-app.use(morgan('tiny'))
+app.use(morgan("tiny"))
 
 //Body Parser
 app.use(express.json())
@@ -26,8 +26,8 @@ app.use(express.static(path.join(__dirname, "..", "public", "uploads")))
 Route(app)
 
 //Error Handling
-app.use((err, req, res, next) => {
-  handleError(err, res)
-})
+// app.use((err, req, res, next) => {
+//   handleError(err, res)
+// })
 
 module.exports = app

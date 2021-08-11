@@ -5,17 +5,17 @@ class DonationProgram {
     this.db = db
     this.pgp = pgp
     this.tableName = "donation_program"
+    this.viewName = "view_donation_program"
     this.allowedColumns = [
       "donation_name",
       "max_date",
       "expected_amount",
       "user_id",
-      "proposal",
       "donation_description",
       "photos",
       "donation_category",
-      "link_program",
       "recipient",
+      "status",
     ]
   }
 
@@ -39,15 +39,15 @@ class DonationProgram {
   }
 
   async remove(id) {
-    return this.db.one("DELETE FROM $1:name WHERE id = $2 RETURNING * ", [
+    return this.db.oneOrNone("DELETE FROM $1:name WHERE id = $2 RETURNING * ", [
       this.tableName,
       id,
     ])
   }
 
   async find(id) {
-    return this.db.oneOrNone("select * from ${tableName:name} WHERE id={id}", {
-      tableName: this.tableName,
+    return this.db.oneOrNone("select * from ${tableName:name} WHERE id=${id}", {
+      tableName: this.viewName,
       id: id,
     })
   }
@@ -56,11 +56,56 @@ class DonationProgram {
     return this.db.any(
       "SELECT * FROM ${tableName:name} ORDER BY ${orderBy:name} " + sort,
       {
-        tableName: this.tableName,
+        tableName: this.viewName,
         orderBy: orderBy,
         sort: sort,
       }
     )
+  }
+
+  async findByFundanaiser(id, orderBy = "id", sort = "ASC") {
+    return this.db.any(
+      "SELECT * FROM ${tableName:name} where id_user = ${id} ORDER BY ${orderBy:name} " +
+        sort,
+      {
+        id: id,
+        tableName: this.viewName,
+        orderBy: orderBy,
+        sort: sort,
+      }
+    )
+  }
+
+  async findByNameAndCategory(
+    category,
+    nama = "",
+    orderBy = "id",
+    sort = "ASC"
+  ) {
+    if (category) {
+      return this.db.any(
+        "SELECT * FROM ${tableName:name} where donation_category = ${category} AND donation_name ILIKE '%${nama:value}%' ORDER BY ${orderBy:name} " +
+          sort,
+        {
+          nama: nama,
+          category: category,
+          tableName: this.viewName,
+          orderBy: orderBy,
+          sort: sort,
+        }
+      )
+    } else {
+      return this.db.any(
+        "SELECT * FROM ${tableName:name} where  donation_name ILIKE '%${nama:value}%' ORDER BY ${orderBy:name} " +
+          sort,
+        {
+          nama: nama,
+          tableName: this.viewName,
+          orderBy: orderBy,
+          sort: sort,
+        }
+      )
+    }
   }
 
   async total() {

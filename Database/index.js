@@ -6,6 +6,7 @@ const {
   DonationProgram,
   DonationCategory,
   HistoryTransaction,
+  DonorDonation,
 } = require("./Repository")
 require("dotenv").config()
 
@@ -18,6 +19,7 @@ const initOptions = {
     obj.donationProgram = new DonationProgram(obj, pgp)
     obj.donationCategory = new DonationCategory(obj, pgp)
     obj.historyTransaction = new HistoryTransaction(obj, pgp)
+    obj.donorDonation = new DonorDonation(obj, pgp)
   },
 }
 // Initializing the library:

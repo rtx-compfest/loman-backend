@@ -27,8 +27,8 @@ router.post("/register", async function (req, res) {
     res.status(200).json({
       message: "Registration successful",
       data: {
-        "email": data["email"],
-        "status_user": data["status_user"]
+        email: data["email"],
+        status_user: data["status_user"],
       },
       status: true,
     })
@@ -58,10 +58,10 @@ router.post("/login", async function (req, res) {
       .json({
         message: "Login successful",
         data: {
-          "name": data["name"],
-          "email": data["email"],
-          "status_user": data["status_user"],
-          "user_roles": data["user_roles"]
+          name: data["name"],
+          email: data["email"],
+          status_user: data["status_user"],
+          user_roles: data["user_roles"],
         },
         status: true,
       })

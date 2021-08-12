@@ -20,7 +20,21 @@ router.get("/", async function (req, res) {
 
 router.get("/fundraiser/:id", async function (req, res) {
   let id = req.params.id
-  let data = await db.donationProgram.findByFundanaiser(id)
+  let data = await db.donationProgram.findByFundanaiser(
+    id,
+    req.query.nama,
+    req.query.orderBy,
+    req.query.sort
+  )
+  res.status(200).json({
+    data: data,
+    status: true,
+  })
+})
+
+router.get("/user/:id", async function (req, res) {
+  let id = req.params.id
+  let data = await db.donorDonation.findByUser(id)
   res.status(200).json({
     data: data,
     status: true,
@@ -30,21 +44,30 @@ router.get("/fundraiser/:id", async function (req, res) {
 router.get("/:id", async function (req, res) {
   let id = req.params.id
   let data = await db.donationProgram.find(id)
+  data.donor = await db.donorDonation.findByDonationProgram(id)
   res.status(200).json({
     data: data,
     status: true,
   })
 })
 
-router.post("/", uploadImage.single("photo"), async function (req, res) {
+router.post("/", uploadImage.single("photos"), async function (req, res) {
   req.body.status = 0
   req.body.photos = req.file.filename
+
   let data = await db.donationProgram.add(req.body)
-  res.status(200).json({
-    message: "Berhasil dimasukkan",
-    data: data,
-    status: true,
-  })
+  if (data) {
+    res.status(200).json({
+      message: "Berhasil dimasukkan",
+      data: data,
+      status: true,
+    })
+  } else {
+    res.status(500).json({
+      message: "Terjadi Kesalahan",
+      status: false,
+    })
+  }
 })
 
 //Upload Gambar
@@ -61,11 +84,18 @@ router.post("/:id", async function (req, res) {
     req.body.photos = req.file.filename
   }
   let data = await db.donationProgram.update(req.body)
-  res.status(200).json({
-    message: "Berhasil diubah",
-    data: data,
-    status: true,
-  })
+  if (data) {
+    res.status(200).json({
+      message: "Berhasil diubah",
+      data: data,
+      status: true,
+    })
+  } else {
+    res.status(500).json({
+      message: "Terjadi Kesalahan",
+      status: false,
+    })
+  }
 })
 
 router.delete("/:id", async function (req, res) {

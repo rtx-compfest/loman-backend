@@ -63,11 +63,12 @@ class DonationProgram {
     )
   }
 
-  async findByFundanaiser(id, orderBy = "id", sort = "ASC") {
+  async findByFundanaiser(id, nama = "", orderBy = "id", sort = "ASC") {
     return this.db.any(
-      "SELECT * FROM ${tableName:name} where id_user = ${id} ORDER BY ${orderBy:name} " +
+      "SELECT * FROM ${tableName:name} where user_id = ${id} and donation_name ILIKE '%${nama:value}%' ORDER BY ${orderBy:name} " +
         sort,
       {
+        nama: nama,
         id: id,
         tableName: this.viewName,
         orderBy: orderBy,

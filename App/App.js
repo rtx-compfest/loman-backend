@@ -7,10 +7,12 @@ const Route = require("../Routes/Routes")
 const Cors = require("cors")
 const { handleError } = require("../Util/ErrorHandler")
 const morgan = require("morgan")
+const cookieParser = require("cookie-parser")
 
 app.use(cmpression())
 app.use(Cors())
 app.use(morgan("tiny"))
+app.use(cookieParser(process.env.JWT_KEY))
 
 //Body Parser
 app.use(express.json())

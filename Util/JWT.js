@@ -3,8 +3,17 @@ require("dotenv").config()
 var key = process.env.JWT_KEY
 var projectName = process.env.PROJECT_NAME
 
-function generate(username) {
-  return jwt.sign({ username: username, project: projectName }, key)
+function generate(data) {
+  return jwt.sign(
+    {
+      userId: data["id"],
+      role: data["user_roles"],
+    },
+    process.env.JWT_KEY,
+    {
+      expiresIn: "3d",
+    }
+  )
 }
 
 function verify(req, res, next) {

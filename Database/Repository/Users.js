@@ -1,3 +1,4 @@
+const { encrypt } = require("../../Util/Encrypt")
 const FilterBody = require("../../Util/FilterBody")
 const FilterUpdate = require("../../Util/FilterUpdate")
 class Users {
@@ -16,8 +17,20 @@ class Users {
     ]
   }
 
+  // Registration
   async add(values) {
     values = FilterBody(values, this.allowedColumns)
+    values["password"] = encrypt(values["password"])
+    if (values["user_roles"] === 2) {
+      values["status_user"] = 1
+    } else if (values["user_roles"] === 3) {
+      values["status_user"] = 0
+    }
+    for (let key in values) {
+      if (values[key]===null) {
+        return null
+      }
+    }
 
     return this.db.one(
       "INSERT INTO public." +
@@ -44,11 +57,16 @@ class Users {
     ])
   }
 
-  async find(id) {
-    return this.db.oneOrNone("select * from ${tableName:name} WHERE id=${id}", {
-      tableName: this.tableName,
-      id: id,
-    })
+  // Login
+  async find(values) {
+    return this.db.oneOrNone(
+      "select * from ${tableName:name} WHERE email=${email} AND password=${password}",
+      {
+        tableName: this.tableName,
+        email: values.email,
+        password: encrypt(values.password),
+      }
+    )
   }
 
   async all(orderBy = "id", sort = "ASC") {

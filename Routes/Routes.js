@@ -2,7 +2,7 @@ const {
   DonationCategoryController,
   DonationProgramController,
   UsersController,
-  HistoryTransactionController
+  HistoryTransactionController,
 } = require("../Controller")
 
 function Route(app) {

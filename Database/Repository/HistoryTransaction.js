@@ -18,6 +18,11 @@ class HistoryTransaction {
 
   async add(values) {
     values = FilterBody(values, this.allowedColumns)
+    if (values["credit"] !== 0) {
+      values["status_transaction"] = 1
+    } else {
+      values["status_transaction"] = 0
+    }
     return this.db.one(
       "INSERT INTO public." +
         this.tableName +
@@ -42,11 +47,14 @@ class HistoryTransaction {
     ])
   }
 
-  async find(id) {
-    return this.db.oneOrNone("select * from ${tableName:name} WHERE id=${id}", {
-      tableName: this.tableName,
-      id: id,
-    })
+  async find(donation_id) {
+    return this.db.any(
+      "select * from ${tableName:name} WHERE donation_id=${id}",
+      {
+        tableName: this.tableName,
+        id: donation_id,
+      }
+    )
   }
 
   async all(orderBy = "id", sort = "ASC") {

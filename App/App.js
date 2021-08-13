@@ -5,7 +5,7 @@ var path = require("path")
 const Middleware = require("../Middleware/Middleware")
 const Route = require("../Routes/Routes")
 const Cors = require("cors")
-const { handleError } = require("../Util/ErrorHandler")
+// const { handleError } = require("../Util/ErrorHandler")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 

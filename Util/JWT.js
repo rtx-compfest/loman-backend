@@ -8,8 +8,9 @@ function generate(data) {
     {
       userId: data["id"],
       role: data["user_roles"],
+      project: projectName
     },
-    process.env.JWT_KEY,
+    key,
     {
       expiresIn: "3d",
     }
@@ -18,9 +19,10 @@ function generate(data) {
 
 function verify(req, res, next) {
   try {
-    let token = req.headers.authorization
-    var decoded = jwt.verify(token, key)
+    const cookie = req.signedCookies
+    const decoded = jwt.verify(cookie.token, key)
     if (decoded.project == projectName) {
+      req.user = decoded
       next()
     } else {
       res.status(401).json({ status: false, message: "Token is not valid" })

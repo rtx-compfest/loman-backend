@@ -1,15 +1,18 @@
-const { verify } = require("../Util/JWT");
+const { verify } = require("../Util/JWT")
 const Middleware = function (req, res, next) {
-  let url = req.path.split("/");
+  let url = req.path.split("/")
   if (url.length > 1) {
-    if (url[1] == "auth") {
-      next();
+    if (
+      (url[1] === "user") &
+      ((url[2] === "login") | (url[2] === "register"))
+    ) {
+      next()
     } else {
-      verify(req, res, next);
+      verify(req, res, next)
     }
   } else {
-    verify(req, res, next);
+    verify(req, res, next)
   }
-};
+}
 
-module.exports = Middleware;
+module.exports = Middleware

@@ -11,6 +11,27 @@ router.get("/", async function (req, res) {
   })
 })
 
+router.get("/fundraiser", async function (req, res) {
+  let data = await db.users.findByRole(
+    3,
+    req.query.status,
+    req.query.orderBy,
+    req.query.sort
+  )
+  res.status(200).json({
+    data: data,
+    status: true,
+  })
+})
+
+router.get("/donor", async function (req, res) {
+  let data = await db.users.findByRole(2, 1, req.query.orderBy, req.query.sort)
+  res.status(200).json({
+    data: data,
+    status: true,
+  })
+})
+
 router.get("/:id", async function (req, res) {
   let id = req.params.id
   let data = await db.users.find(id)

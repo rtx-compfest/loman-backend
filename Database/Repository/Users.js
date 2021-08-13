@@ -81,6 +81,20 @@ class Users {
     })
   }
 
+  async findByRole(role, status = "0", orderBy = "id", sort = "ASC") {
+    return this.db.any(
+      "SELECT * FROM ${tableName:name} where idrole = '${role:value}' and status_user  = '${status:value}' ORDER BY ${orderBy:name} " +
+        sort,
+      {
+        status: status,
+        role: role,
+        tableName: this.viewName,
+        orderBy: orderBy,
+        sort: sort,
+      }
+    )
+  }
+
   async all(orderBy = "id", sort = "ASC") {
     return this.db.any(
       "SELECT * FROM ${tableName:name} ORDER BY ${orderBy:name} " + sort,

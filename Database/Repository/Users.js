@@ -6,6 +6,7 @@ class Users {
     this.db = db
     this.pgp = pgp
     this.tableName = "users"
+    this.viewName = "view_users"
     this.allowedColumns = [
       "name",
       "email",
@@ -14,6 +15,10 @@ class Users {
       "phone",
       "status_user",
       "user_roles",
+      "job",
+      "institution",
+      "about",
+      "socialmedia",
     ]
   }
 
@@ -27,7 +32,7 @@ class Users {
       values["status_user"] = 0
     }
     for (let key in values) {
-      if (values[key]===null) {
+      if (values[key] === null) {
         return null
       }
     }
@@ -69,11 +74,18 @@ class Users {
     )
   }
 
+  async find(id) {
+    return this.db.any("select * from ${tableName:name} WHERE id=${id}", {
+      tableName: this.viewName,
+      id: id,
+    })
+  }
+
   async all(orderBy = "id", sort = "ASC") {
     return this.db.any(
       "SELECT * FROM ${tableName:name} ORDER BY ${orderBy:name} " + sort,
       {
-        tableName: this.tableName,
+        tableName: this.viewName,
         orderBy: orderBy,
         sort: sort,
       }

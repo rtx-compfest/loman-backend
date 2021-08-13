@@ -38,7 +38,7 @@ router.post("/topup", DonorChecker, async function (req, res) {
 })
 
 // Donate
-router.post("/donate:donationId", DonorChecker, async function (req, res) {
+router.post("/donate/:donationId", DonorChecker, async function (req, res) {
   const date = new Date()
   const body = {
     transaction_date:

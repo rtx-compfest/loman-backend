@@ -64,7 +64,7 @@ router.post("/register", async function (req, res) {
 
 // Login
 router.post("/login", async function (req, res) {
-  let data = await db.users.find(req.body)
+  let data = await db.users.findValue(req.body)
   if (data !== null) {
     const token = generate(data)
     res
@@ -72,7 +72,7 @@ router.post("/login", async function (req, res) {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60000),
         httpOnly: true,
         signed: true,
-        sameSite: "none",
+        sameSite: "strict",
         secure: true,
       })
       .status(200)

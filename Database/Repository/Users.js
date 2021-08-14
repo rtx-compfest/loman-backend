@@ -63,7 +63,7 @@ class Users {
   }
 
   // Login
-  async find(values) {
+  async findValue(values) {
     return this.db.oneOrNone(
       "select * from ${tableName:name} WHERE email=${email} AND password=${password}",
       {

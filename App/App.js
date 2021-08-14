@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, "..", "public")))
 app.use(express.static(path.join(__dirname, "..", "public", "uploads")))
 
 // JWT Middleware
-app.use(Middleware)
+// app.use(Middleware)
 
 //Routing
 Route(app)

@@ -25,8 +25,7 @@ function verify(req, res, next) {
       res.status(401).json({ status: false, message: "Token is not valid" })
     }
   } catch (err) {
-    next()
-    // res.status(401).json({ status: false, message: "Token is not valid" })
+    res.status(401).json({ status: false, message: "Token is not valid" })
   }
 }
 

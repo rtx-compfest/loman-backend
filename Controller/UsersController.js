@@ -95,6 +95,23 @@ router.post("/login", async function (req, res) {
   }
 })
 
+// Logout
+router.post("/logout", async function (req, res) {
+  res
+    .clearCookie("token", {
+      httpOnly: true,
+      signed: true,
+      sameSite: "strict",
+      secure: true,
+    })
+    .status(200)
+    .json({
+      message: "Logout successful",
+      data: null,
+      status: true,
+    })
+})
+
 router.put("/:id", async function (req, res) {
   req.body.id = req.params.id
   let data = await db.users.update(req.body)

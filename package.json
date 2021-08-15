@@ -22,16 +22,22 @@
     "pg-promise": "^10.10.2"
   },
   "scripts": {
-    "start": "nodemon ./public/index.js"
+    "start": "nodemon ./public/index.js",
+    "test" : "jest --forceExit --detectOpenHandles  --watchAll --maxWorkers=1"
   },
   "prettier": {
     "tabWidth": 2,
     "semi": false
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.3.2"
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "superagent": "^6.1.0",
+    "supertest": "^6.1.5"
   }
 }

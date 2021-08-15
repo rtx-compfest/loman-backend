@@ -27,4 +27,10 @@ app.use(Middleware)
 //Routing
 Route(app)
 
+app.use("/", (req, res) => {
+  res.status(200).json({
+    status: true,
+  })
+})
+
 module.exports = app

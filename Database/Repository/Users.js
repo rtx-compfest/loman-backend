@@ -26,7 +26,7 @@ class Users {
   async add(values) {
     values = FilterBody(values, this.allowedColumns)
     values["password"] = encrypt(values["password"])
-    if (values["user_roles"] === 2) {
+    if (values["user_roles"] < 3) {
       values["status_user"] = 1
     } else if (values["user_roles"] === 3) {
       values["status_user"] = 0
@@ -64,14 +64,18 @@ class Users {
 
   // Login
   async find(values) {
-    return this.db.oneOrNone(
-      "select * from ${tableName:name} WHERE email=${email} AND password=${password}",
-      {
-        tableName: this.tableName,
-        email: values.email,
-        password: encrypt(values.password),
-      }
-    )
+    return this.db
+      .oneOrNone(
+        "select * from ${tableName:name} WHERE email=${email} AND password=${password}",
+        {
+          tableName: this.tableName,
+          email: values.email,
+          password: encrypt(values.password),
+        }
+      )
+      .catch((e) => {
+        console.log(e)
+      })
   }
 
   async find(id) {

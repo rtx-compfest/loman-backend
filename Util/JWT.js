@@ -11,9 +11,6 @@ function generate(data) {
       project: projectName
     },
     key,
-    {
-      expiresIn: "3d",
-    }
   )
 }
 

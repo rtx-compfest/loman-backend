@@ -16,7 +16,6 @@ router.post("/topup", DonorChecker, async function (req, res) {
     user_id: req.user.userId,
     donation_id: null,
     notes: req.body.notes,
-    isVisible: req.body.isVisible,
   }
 
   const data = await db.historyTransaction.add(body)

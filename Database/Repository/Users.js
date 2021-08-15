@@ -26,7 +26,7 @@ class Users {
   async add(values) {
     values = FilterBody(values, this.allowedColumns)
     values["password"] = encrypt(values["password"])
-    if (values["user_roles"] < 3) {
+    if (values["user_roles"] === 2) {
       values["status_user"] = 1
     } else if (values["user_roles"] === 3) {
       values["status_user"] = 0

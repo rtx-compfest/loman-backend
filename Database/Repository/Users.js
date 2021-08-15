@@ -63,21 +63,6 @@ class Users {
   }
 
   // Login
-<<<<<<< HEAD
-  async find(values) {
-    return this.db
-      .oneOrNone(
-        "select * from ${tableName:name} WHERE email=${email} AND password=${password}",
-        {
-          tableName: this.tableName,
-          email: values.email,
-          password: encrypt(values.password),
-        }
-      )
-      .catch((e) => {
-        console.log(e)
-      })
-=======
   async findValue(values) {
     return this.db.oneOrNone(
       "select * from ${tableName:name} WHERE email=${email} AND password=${password}",
@@ -87,7 +72,6 @@ class Users {
         password: encrypt(values.password),
       }
     )
->>>>>>> 809cd5cf152919ddd31aa25bd2930cda57ceea3b
   }
 
   async find(id) {

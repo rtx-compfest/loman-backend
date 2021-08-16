@@ -25,11 +25,10 @@ const initOptions = {
 // Initializing the library:
 const pgp = pgPromise(initOptions)
 const connectionString = process.env.CONNECTION_STRING || ""
-const config = {
+
+const db = pgp({
   connectionString: connectionString,
   ssl: { rejectUnauthorized: false },
-}
-
-const db = pgp(config)
+})
 
 module.exports = { db, pgp }

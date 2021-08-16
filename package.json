@@ -23,7 +23,8 @@
     "set-cookie-parser": "^2.4.8"
   },
   "scripts": {
-    "start": "nodemon ./public/index.js"
+    "start": "nodemon ./public/index.js",
+    "test": "mocha --timeout 10000"
   },
   "prettier": {
     "tabWidth": 2,
@@ -37,10 +38,7 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "jest": "^27.0.6",
     "mocha": "^9.0.3",
-    "prettier": "^2.3.2",
-    "superagent": "^6.1.0",
-    "supertest": "^6.1.5"
+    "prettier": "^2.3.2"
   }
 }

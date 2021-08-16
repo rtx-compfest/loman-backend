@@ -26,7 +26,7 @@ class Users {
   async add(values) {
     values = FilterBody(values, this.allowedColumns)
     values["password"] = encrypt(values["password"])
-    if (values["user_roles"] === 2) {
+    if (values["user_roles"] < 3) {
       values["status_user"] = 1
     } else if (values["user_roles"] === 3) {
       values["status_user"] = 0
@@ -37,7 +37,7 @@ class Users {
       }
     }
 
-    return this.db.one(
+    return this.db.oneOrNone(
       "INSERT INTO public." +
         this.tableName +
         "(${this:name}) VALUES (${this:csv}) RETURNING *;",
@@ -48,15 +48,14 @@ class Users {
   async update(values) {
     let body = new FilterUpdate(values, this.pgp, this.allowedColumns)
 
-    return this.db.one("UPDATE public.$1:name set $2 WHERE id=$3 RETURNING *", [
-      this.tableName,
-      body,
-      values.id,
-    ])
+    return this.db.oneOrNone(
+      "UPDATE public.$1:name set $2 WHERE id=$3 RETURNING *",
+      [this.tableName, body, values.id]
+    )
   }
 
   async remove(id) {
-    return this.db.one("DELETE FROM $1:name WHERE id = $2 RETURNING * ", [
+    return this.db.oneOrNone("DELETE FROM $1:name WHERE id = $2 RETURNING * ", [
       this.tableName,
       id,
     ])
@@ -107,7 +106,7 @@ class Users {
   }
 
   async total() {
-    return this.db.one(
+    return this.db.oneOrNone(
       "SELECT count(*) FROM " + this.tableName,
       [],
       (a) => +a.count

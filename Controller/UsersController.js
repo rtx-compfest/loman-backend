@@ -50,6 +50,7 @@ router.post("/register", async function (req, res) {
       data: {
         email: data["email"],
         status_user: data["status_user"],
+        id: data["id"],
       },
       status: true,
     })
@@ -123,8 +124,7 @@ router.put("/:id", async function (req, res) {
 })
 
 router.delete("/:id", async function (req, res) {
-  req.body.id = req.params.id
-  let data = await db.users.remove(req.id)
+  let data = await db.users.remove(req.params.id)
   res.status(200).json({
     message: "Berhasil dihapus",
     data: data,

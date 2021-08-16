@@ -26,7 +26,7 @@ class ViewUsers {
   }
 
   async total() {
-    return this.db.one(
+    return this.db.oneOrNone(
       "SELECT count(*) FROM " + this.tableName,
       [],
       (a) => +a.count

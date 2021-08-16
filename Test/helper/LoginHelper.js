@@ -4,11 +4,12 @@ class LoginHelper {
   ROLES = ["ADMIN", "DONOR", "FUNDRAISER"]
   constructor(request, ROLE = "ADMIN") {
     this.request = request
+    this.token = ""
     if (this.ROLES.indexOf(ROLE) < 0) {
       ROLE = "ADMIN"
     }
     this.dataSample = {
-      email: "sample@email.com",
+      email: `sample@${ROLE}.com`,
       password: "sample",
       name: "sample",
       address: "Indonesia",
@@ -24,15 +25,15 @@ class LoginHelper {
   }
 
   initAccount(token) {
-    this.login(token)
-    return
     this.request
       .post("/user/register")
       .send(this.dataSample)
-      .end((err, res) => {
-        this.id_user = res.body.id
-        if (error) return token("token=")
+      .then((res) => {
+        this.id_user = res.body.data.id
         this.login(token)
+      })
+      .catch((err) => {
+        token("token=")
       })
   }
 
@@ -42,15 +43,23 @@ class LoginHelper {
       .send(this.dataSample)
       .end((err, res) => {
         let cookies = setCookie.parse(res, {
-          decodeValues: true, // default: true
+          decodeValues: true,
         })
-        cookies = "token=" + cookies[0].value + ";"
         if (err) return token("token=")
-        token(cookies)
+        token("token=" + cookies[0].value + ";")
       })
   }
 
-  removeTestAccount() {}
+  removeTestAccount(done, cookies) {
+    if (!this.id_user) return done()
+    this.request
+      .delete(`/user/${this.id_user}`)
+      .set("Cookie", cookies)
+      .end((err, res) => {
+        if (err) return done(err)
+        done()
+      })
+  }
 }
 
 module.exports = LoginHelper

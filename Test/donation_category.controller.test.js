@@ -5,7 +5,8 @@ const LoginHelper = require("./helper/LoginHelper")
 const expect = chai.expect
 
 chai.use(chaiHttp)
-const loginHelper = new LoginHelper(chai.request(server))
+var agent = chai.request.agent(server)
+const loginHelper = new LoginHelper(agent)
 
 let cookies
 const subUrl = "/donation_category"
@@ -18,7 +19,7 @@ describe("Donation category Controller", () => {
   })
 
   it("should can show donation category", async () => {
-    const res = await chai.request(server).get(subUrl).set("Cookie", cookies)
+    const res = await agent.get(subUrl).set("Cookie", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -32,5 +33,9 @@ describe("Donation category Controller", () => {
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
+  })
+
+  after(function (done) {
+    loginHelper.removeTestAccount(done, cookies)
   })
 })

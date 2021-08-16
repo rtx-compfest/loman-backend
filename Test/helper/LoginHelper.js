@@ -1,10 +1,8 @@
 const { db } = require("../../Database")
-const TableTempHelper = require("./TableTempHelper")
-
+const setCookie = require("set-cookie-parser")
 class LoginHelper {
   ROLES = ["ADMIN", "DONOR", "FUNDRAISER"]
-  constructor(app, request, ROLE = "ADMIN") {
-    this.app = app
+  constructor(request, ROLE = "ADMIN") {
     this.request = request
     if (this.ROLES.indexOf(ROLE) < 0) {
       ROLE = "ADMIN"
@@ -25,13 +23,34 @@ class LoginHelper {
     // tableHelper.createTableTemp()
   }
 
-  register() {
-    return this.request.post("/user/register").send(this.dataSample)
+  initAccount(token) {
+    this.login(token)
+    return
+    this.request
+      .post("/user/register")
+      .send(this.dataSample)
+      .end((err, res) => {
+        this.id_user = res.body.id
+        if (error) return token("token=")
+        this.login(token)
+      })
   }
 
-  login() {
-    return this.request.post("/user/login").send(this.dataSample)
+  login(token) {
+    this.request
+      .post("/user/login")
+      .send(this.dataSample)
+      .end((err, res) => {
+        let cookies = setCookie.parse(res, {
+          decodeValues: true, // default: true
+        })
+        cookies = "token=" + cookies[0].value + ";"
+        if (err) return token("token=")
+        token(cookies)
+      })
   }
+
+  removeTestAccount() {}
 }
 
 module.exports = LoginHelper

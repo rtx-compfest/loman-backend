@@ -33,6 +33,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
   next()
 })
+app.set("trust proxy", 1)
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 

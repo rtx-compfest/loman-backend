@@ -5,6 +5,7 @@ const multer = require("multer")
 const { DonationProgramService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 const FundraiserChecker = require("../Middleware/FundraiserChecker")
+const AdminChecker = require("../Middleware/AdminChecker")
 const uploadImage = new UploadImage(multer, "donation_program").upload
 const donationProgramService = new DonationProgramService()
 
@@ -64,7 +65,7 @@ router.post(
 )
 
 // Verify Donation Program Creation
-router.post("/verify/:id", async function (req, res) {
+router.post("/verify/:id", AdminChecker, async function (req, res) {
   const data = donationProgramService.update(req.params.id, { status: "1" })
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({
@@ -75,7 +76,7 @@ router.post("/verify/:id", async function (req, res) {
 })
 
 // Reject Donation Program Creation
-router.post("/reject/:id", async function (req, res) {
+router.post("/reject/:id", AdminChecker, async function (req, res) {
   const data = donationProgramService.update(req.params.id, { status: "2" })
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({

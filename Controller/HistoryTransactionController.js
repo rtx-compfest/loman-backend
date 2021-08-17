@@ -24,6 +24,7 @@ router.post("/topup", DonorChecker, async function (req, res) {
       message: "Topup successful",
       data: {
         status_transaction: data["status_transaction"],
+        id: data["id"],
       },
       status: true,
     })
@@ -50,16 +51,25 @@ router.post("/donate/:donationId", DonorChecker, async function (req, res) {
     isVisible: req.body.isVisible,
   }
 
-  const data = await db.historyTransaction.add(body)
-  if (data !== null) {
-    res.status(200).json({
-      message: "Donation successful",
-      data: {
-        status_transaction: data["status_transaction"],
-      },
-      status: true,
-    })
-  } else {
+  try {
+    const data = await db.historyTransaction.add(body)
+    if (data !== null) {
+      res.status(200).json({
+        message: "Donation successful",
+        data: {
+          id: data["id"],
+          status_transaction: data["status_transaction"],
+        },
+        status: true,
+      })
+    } else {
+      res.status(500).json({
+        message: "Topup error",
+        data: {},
+        status: false,
+      })
+    }
+  } catch (error) {
     res.status(500).json({
       message: "Topup error",
       data: {},
@@ -74,20 +84,17 @@ router.post(
   FundraiserChecker,
   async function (req, res) {
     const date = new Date()
-    let data = db.historyTransaction.find(req.params.donationId)
-    let amount = 0
-    for (let i = 0; i < data.length; i++) {
-      amount = amount + data[i].debit - data[i].credit
-    }
+
     const body = {
       transaction_date:
         date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(),
       debit: 0,
-      credit: amount,
+      credit: req.body.amount,
       user_id: req.user.userId,
       donation_id: req.params.donationId,
       notes: req.body.notes,
     }
+    console.log(body)
 
     data = await db.historyTransaction.add(body)
     if (data !== null) {
@@ -95,6 +102,7 @@ router.post(
         message: "Withdraw requested",
         data: {
           status_transaction: data["status_transaction"],
+          id: data["id"],
         },
         status: true,
       })
@@ -120,6 +128,7 @@ router.post("/verify/:id", AdminChecker, async function (req, res) {
       message: "Withdraw accepted",
       data: {
         status_transaction: data["status_transaction"],
+        id: data["id"],
       },
       status: true,
     })
@@ -143,6 +152,7 @@ router.post("/reject/:id", AdminChecker, async function (req, res) {
       message: "Withdraw rejected",
       data: {
         status_transaction: data["status_transaction"],
+        id: data["id"],
       },
       status: true,
     })

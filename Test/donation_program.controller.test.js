@@ -6,9 +6,10 @@ const expect = chai.expect
 
 chai.use(chaiHttp)
 var agent = chai.request.agent(server)
-const loginHelper = new LoginHelper(agent, "FUNDRAISER")
+const loginFundraiser = new LoginHelper(agent, "FUNDRAISER")
+const loginAdmin = new LoginHelper(agent, "ADMIN")
 const fs = require("fs")
-let cookies
+let cookiesFundraiser, cookiesAdmin
 let idTemp = ""
 const subUrl = "/donation_program"
 const path = require("path")
@@ -18,14 +19,17 @@ const tempFile = fs.readFileSync(
 
 describe("Donation program Controller", () => {
   before(function (done) {
-    loginHelper.initAccount((token) => {
-      cookies = token
-      done()
+    loginFundraiser.initAccount((token) => {
+      cookiesFundraiser = token
+      loginAdmin.initAccount((token) => {
+        cookiesAdmin = token
+        done()
+      })
     })
   })
 
   it("should can show donation program", async () => {
-    const res = await agent.get(subUrl).set("Cookie", cookies)
+    const res = await agent.get(subUrl).set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -34,12 +38,12 @@ describe("Donation program Controller", () => {
   it("should can post donation program", async () => {
     const res = await agent
       .post(subUrl)
-      .set("Cookie", cookies)
+      .set("Cookie", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation")
       .field("max_date", "2021-09-01")
       .field("expected_amount", "10000")
-      .field("user_id", loginHelper.id_user)
+      .field("user_id", loginFundraiser.id_user)
       .field("donation_description", "TEST")
       .field("recipient", "Test")
       .attach("photos", tempFile, "preview.png")
@@ -52,7 +56,7 @@ describe("Donation program Controller", () => {
   it("should can update donation program", async () => {
     const res = await agent
       .post(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookies)
+      .set("Cookie", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation Updated")
       .field("max_date", "2021-09-01")
@@ -68,7 +72,7 @@ describe("Donation program Controller", () => {
   it("should can update donation program without image", async () => {
     const res = await agent
       .post(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookies)
+      .set("Cookie", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation Updated")
       .field("max_date", "2021-09-01")
@@ -85,7 +89,7 @@ describe("Donation program Controller", () => {
     const res = await chai
       .request(server)
       .get(`${subUrl}/0`)
-      .set("Cookie", cookies)
+      .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("status")
     expect(res.body.status).to.equal(false)
     expect(res.status).to.equal(404)
@@ -95,15 +99,35 @@ describe("Donation program Controller", () => {
     const res = await chai
       .request(server)
       .get(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookies)
+      .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.body.status).to.equal(true)
     expect(res.status).to.equal(200)
   })
 
+  it("should can verify donation program ", async () => {
+    const res = await agent
+      .post(`${subUrl}/verify/${idTemp}`)
+      .set("Cookie", cookiesAdmin)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should can reject donation program ", async () => {
+    const res = await agent
+      .post(`${subUrl}/reject/${idTemp}`)
+      .set("Cookie", cookiesAdmin)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
   it("should can delete donation program ", async () => {
-    const res = await agent.delete(`${subUrl}/${idTemp}`).set("Cookie", cookies)
+    const res = await agent
+      .delete(`${subUrl}/${idTemp}`)
+      .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -113,7 +137,7 @@ describe("Donation program Controller", () => {
     const res = await chai
       .request(server)
       .get(`${subUrl}/fundraiser/0`)
-      .set("Cookie", cookies)
+      .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -123,13 +147,15 @@ describe("Donation program Controller", () => {
     const res = await chai
       .request(server)
       .get(`${subUrl}/donor/0`)
-      .set("Cookie", cookies)
+      .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
   })
 
   after(function (done) {
-    loginHelper.removeTestAccount(done, cookies)
+    loginFundraiser.removeTestAccount(() => {
+      loginAdmin.removeTestAccount(done, cookiesFundraiser)
+    }, cookiesFundraiser)
   })
 })

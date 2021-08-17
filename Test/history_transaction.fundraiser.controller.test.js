@@ -1,0 +1,103 @@
+const chai = require("chai")
+const chaiHttp = require("chai-http")
+const server = require("../public")
+const LoginHelper = require("./helper/LoginHelper")
+const expect = chai.expect
+
+chai.use(chaiHttp)
+var agent = chai.request.agent(server)
+const loginHelper = new LoginHelper(agent, "ADMIN")
+const loginFundraiser = new LoginHelper(agent, "FUNDRAISER")
+const fs = require("fs")
+
+let cookies
+let cookiesFundraiser
+
+let idTempDonation = ""
+let idTempTransaction = ""
+const subUrl = "/donation_program"
+const path = require("path")
+const { db } = require("../Database")
+const tempFile = fs.readFileSync(
+  path.resolve(__dirname + `/helper/image/test_image.png`)
+)
+
+describe("History Trasaction Fundraiser Controller", () => {
+  before(function (done) {
+    loginHelper.initAccount((token) => {
+      cookies = token
+      loginFundraiser.initAccount((token) => {
+        cookiesFundraiser = token
+        done()
+      })
+    })
+  })
+
+  it("should can post donation program", async () => {
+    const res = await agent
+      .post(subUrl)
+      .set("Cookie", cookiesFundraiser)
+      .set("Content-Type", "application/x-www-form-urlencoded")
+      .field("donation_name", "Test Donation")
+      .field("max_date", "2021-09-01")
+      .field("expected_amount", "10000")
+      .field("user_id", loginFundraiser.id_user)
+      .field("donation_description", "TEST")
+      .field("recipient", "Test")
+      .attach("photos", tempFile, "preview.png")
+    idTempDonation = res.body.data.id
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should can withdraw donation program ", async () => {
+    const dataWithdraw = {
+      amount: 1000,
+      notes: "-",
+      isVisible: 1,
+    }
+    const res = await agent
+      .post(`/wallet/withdraw/${idTempDonation}`)
+      .send(dataWithdraw)
+      .set("Cookie", cookiesFundraiser)
+    idTempTransaction = res.body.data.id
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should can verify donation program ", async () => {
+    const res = await agent
+      .post(`/wallet/verify/${idTempTransaction}`)
+      .set("Cookie", cookies)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should can reject donation program ", async () => {
+    const res = await agent
+      .post(`/wallet/reject/${idTempTransaction}`)
+      .set("Cookie", cookies)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should can delete donation program ", async () => {
+    await db.historyTransaction.remove(idTempTransaction)
+    const res = await agent
+      .delete(`${subUrl}/${idTempDonation}`)
+      .set("Cookie", cookiesFundraiser)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
+  after(function (done) {
+    loginHelper.removeTestAccount(() => {
+      loginFundraiser.removeTestAccount(done, cookies)
+    }, cookies)
+  })
+})

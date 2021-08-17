@@ -3,6 +3,9 @@ const { UserService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 var router = express.Router()
 const { generate } = require("../Util/JWT")
+const handlerInput = require("../Util/ValidationHandler")
+const validation = require("../Middleware/UserValidation")
+const AdminChecker = require("../Middleware/AdminChecker")
 const userService = new UserService()
 
 router.get("/", async function (req, res, next) {
@@ -42,22 +45,26 @@ router.get("/:id", async function (req, res, next) {
 })
 
 // Registration
-router.post("/register", async function (req, res, next) {
-  let data = await userService.register(req.body)
-  if (!data) return next(new ErrorHandler(404, "Pendaftaran gagal"))
-  res.status(200).json({
-    message: "Pendaftaran Berhasil",
-    data: data,
-    status: true,
-  })
-})
+router.post(
+  "/register",
+  validation(),
+  handlerInput,
+  async function (req, res, next) {
+    let data = await userService.register(req.body)
+    if (!data) return next(new ErrorHandler(404, "Pendaftaran gagal"))
+    res.status(200).json({
+      message: "Pendaftaran Berhasil",
+      data: data,
+      status: true,
+    })
+  }
+)
 
 // Login
 router.post("/login", async function (req, res, next) {
   let data = await userService.login(req.body)
-  if (!data) return next(new ErrorHandler(404, "Terjadi kesalahan saat login"))
-  if (data.length < 1)
-    return next(new ErrorHandler(404, "Akun tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Akun tidak ditemukan"))
+
   const token = generate(data)
   res
     .cookie("token", token, {
@@ -98,7 +105,7 @@ router.post("/logout", async function (req, res) {
 })
 
 // Verify fundraiser registration
-router.post("/verify/:id", async function (req, res) {
+router.post("/verify/:id", AdminChecker, async function (req, res) {
   const data = userService.update(req.params.id, { status_user: "1" })
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({
@@ -109,7 +116,7 @@ router.post("/verify/:id", async function (req, res) {
 })
 
 // Reject fundraiser registration
-router.post("/reject/:id", async function (req, res) {
+router.post("/reject/:id", AdminChecker, async function (req, res) {
   const data = userService.update(req.params.id, { status_user: "2" })
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({

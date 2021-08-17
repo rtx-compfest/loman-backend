@@ -21,7 +21,7 @@ app.use(
     origin: function (origin, callback) {
       callback(null, true)
     },
-    preflightContinue: true,
+
     credentials: true,
   })
 )

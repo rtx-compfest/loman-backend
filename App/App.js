@@ -15,7 +15,7 @@ app.use(timeout("10s"))
 
 app.use(cmpression())
 
-// app.use(Cors())
+// set cors
 app.use(
   Cors({
     origin: function (origin, callback) {
@@ -40,18 +40,6 @@ app.use(Middleware)
 
 //Routing
 Route(app)
-// const axios = require("axios")
 
-// axios
-//   .post(
-//     "https://loman-backend.herokuapp.com/user/login",
-//     { email: "sample@ADMIN1.com", password: "sample123", user_roles: 1 },
-//     {
-//       withCredentials: true,
-//     }
-//   )
-//   .then((res) => {
-//     console.log(res.headers["set-cookie"])
-//   })
 app.use(handleError)
 module.exports = app

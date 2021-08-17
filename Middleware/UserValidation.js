@@ -5,6 +5,7 @@ function validate() {
   return [
     body("email").isEmail().withMessage("Email is invalid"),
     body("email").custom(checkEmail),
+    body("user_roles").notEmpty().withMessage("Role is required"),
     body("password")
       .isLength({ min: 8 })
       .withMessage("Password is not strong. Min length : 8"),

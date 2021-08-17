@@ -10,7 +10,7 @@ const walletService = new WalletService()
 // Topup wallet
 router.post("/topup", DonorChecker, async function (req, res, next) {
   const data = await walletService.topUp(req.user.userId, req.body)
-  if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     message: "Topup successful",
     data: {
@@ -31,7 +31,7 @@ router.post(
       req.params.donationId,
       req.body
     )
-    if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+    if (!data) return next(new ErrorHandler(404, "Data is not found"))
     res.status(200).json({
       message: "Donation successful",
       data: {
@@ -53,7 +53,7 @@ router.post(
       req.params.donationId,
       req.body
     )
-    if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+    if (!data) return next(new ErrorHandler(404, "Data is not found"))
     if (data.limitAmount)
       return next(new ErrorHandler(404, "Amount tidak cukup"))
     res.status(200).json({
@@ -70,7 +70,7 @@ router.post(
 // Admin verify wd request
 router.post("/verify/:id", AdminChecker, async function (req, res, next) {
   const data = await walletService.verify(req.params.id)
-  if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     message: "Verify Withdraw successful",
     data: {
@@ -83,7 +83,7 @@ router.post("/verify/:id", AdminChecker, async function (req, res, next) {
 
 router.post("/reject/:id", AdminChecker, async function (req, res, next) {
   const data = await walletService.reject(req.params.id)
-  if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     message: "Reject Withdraw successful",
     data: {

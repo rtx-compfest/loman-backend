@@ -15,7 +15,7 @@ let cookiesFundraiser
 
 let idTempDonation = ""
 let idTempTransaction = ""
-const subUrl = "/donation_program"
+
 const path = require("path")
 const { db } = require("../Database")
 const tempFile = fs.readFileSync(
@@ -35,7 +35,7 @@ describe("History Trasaction Fundraiser Controller", () => {
 
   it("should can post donation program", async () => {
     const res = await agent
-      .post(subUrl)
+      .post(`/donation_program`)
       .set("Cookie", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation")
@@ -88,7 +88,7 @@ describe("History Trasaction Fundraiser Controller", () => {
   it("should can delete donation program ", async () => {
     await db.historyTransaction.remove(idTempTransaction)
     const res = await agent
-      .delete(`${subUrl}/${idTempDonation}`)
+      .delete(`/donation_program/${idTempDonation}`)
       .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")

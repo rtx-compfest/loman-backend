@@ -99,7 +99,7 @@ router.post("/:id", async function (req, res, next) {
     req.body.photos = req.file.filename
   }
   let data = await donationProgramService.update(req.params.id, req.body)
-  if (!data) next(new ErrorHandler(404, "Terjadi kesalaahan saat pengubahan"))
+  if (!data) next(new ErrorHandler(404, "Some field is empty"))
   res.status(200).json({
     message: "Berhasil diubah",
     data: data,
@@ -109,7 +109,7 @@ router.post("/:id", async function (req, res, next) {
 
 router.delete("/:id", async function (req, res, next) {
   let data = await donationProgramService.remove(req.params.id)
-  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat penghapusan"))
+  if (!data) next(new ErrorHandler(404, "Donation Program is not found"))
   res.status(200).json({
     message: "Berhasil dihapus",
     data: data,

@@ -1,5 +1,5 @@
 const FundraiserChecker = function (req, res, next) {
-  if (req.user.role === "2") {
+  if (req.user.role == "3") {
     next()
   }
 }

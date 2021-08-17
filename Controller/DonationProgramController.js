@@ -5,6 +5,7 @@ var router = express.Router()
 const multer = require("multer")
 const { DonationProgramService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
+const FundraiserChecker = require("../Middleware/FundraiserChecker")
 const uploadImage = new UploadImage(multer, "donation_program").upload
 const donationProgramService = new DonationProgramService()
 
@@ -47,16 +48,21 @@ router.get("/:id", async function (req, res, next) {
   })
 })
 
-router.post("/", uploadImage.single("photos"), async function (req, res, next) {
-  req.body.photos = req.file.filename
-  let data = await donationProgramService.add(req.body)
-  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
-  res.status(200).json({
-    message: "Berhasil dimasukkan",
-    data: data,
-    status: true,
-  })
-})
+router.post(
+  "/",
+  uploadImage.single("photos"),
+  FundraiserChecker,
+  async function (req, res, next) {
+    req.body.photos = req.file.filename
+    let data = await donationProgramService.add(req.body)
+    if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+    res.status(200).json({
+      message: "Berhasil dimasukkan",
+      data: data,
+      status: true,
+    })
+  }
+)
 
 //Upload Gambar
 router.post("/:id", uploadImage.any(), async function (req, res, next) {

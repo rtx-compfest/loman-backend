@@ -49,6 +49,7 @@ class DonationProgramService {
 
   async add(data) {
     data.status = 0
+
     try {
       return await db.donationProgram.add(data)
     } catch {

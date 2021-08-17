@@ -20,8 +20,6 @@ class LoginHelper {
       socialmedia: "Anomin",
       user_roles: this.ROLES.indexOf(ROLE) + 1,
     }
-    // let tableHelper = new TableTempHelper(db)
-    // tableHelper.createTableTemp()
   }
 
   initAccount(token) {

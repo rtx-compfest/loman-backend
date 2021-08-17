@@ -26,7 +26,7 @@ describe("User Controller", () => {
     const res = await agent
       .post(subUrl + "/login")
       .send({ email: "fake@email.com", password: "fake1234" })
-    expect(res.body).to.have.property("status")
+
     expect(res.status).to.equal(404)
   })
 

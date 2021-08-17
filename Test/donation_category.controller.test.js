@@ -26,10 +26,7 @@ describe("Donation category Controller", () => {
   })
 
   it("should can show donation category selected", async () => {
-    const res = await chai
-      .request(server)
-      .get(`${subUrl}/1`)
-      .set("Cookie", cookies)
+    const res = await agent.get(`${subUrl}/1`).set("Cookie", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)

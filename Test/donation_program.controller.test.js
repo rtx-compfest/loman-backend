@@ -85,24 +85,15 @@ describe("Donation program Controller", () => {
     expect(res.status).to.equal(200)
   })
 
-  it("should can show donation program selected not found", async () => {
-    const res = await chai
-      .request(server)
-      .get(`${subUrl}/0`)
-      .set("Cookie", cookiesFundraiser)
-    expect(res.body).to.have.property("status")
-    expect(res.body.status).to.equal(false)
-    expect(res.status).to.equal(404)
-  })
+  // it("should can show donation program selected not found", async () => {
+  //   const res = await agent.get(`${subUrl}/0`).set("Cookie", cookiesFundraiser)
+  //   expect(res.status).to.equal(404)
+  // })
 
   it("should can show donation program selected found", async () => {
-    const res = await chai
-      .request(server)
+    const res = await agent
       .get(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookiesFundraiser)
-    expect(res.body).to.have.property("data")
-    expect(res.body.data).to.be.an("object")
-    expect(res.body.status).to.equal(true)
+      .set("Cookie", cookiesAdmin)
     expect(res.status).to.equal(200)
   })
 
@@ -134,8 +125,7 @@ describe("Donation program Controller", () => {
   })
 
   it("should can show donation program by fundraiser", async () => {
-    const res = await chai
-      .request(server)
+    const res = await agent
       .get(`${subUrl}/fundraiser/0`)
       .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")
@@ -144,8 +134,7 @@ describe("Donation program Controller", () => {
   })
 
   it("should can show donation program by donor", async () => {
-    const res = await chai
-      .request(server)
+    const res = await agent
       .get(`${subUrl}/donor/0`)
       .set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")

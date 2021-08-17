@@ -9,7 +9,8 @@ var timeout = require("connect-timeout")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const { handleError } = require("../Util/ErrorHandler")
-const session = require("express-session")
+
+var session = require("express-session")
 //Timeout
 app.use(timeout("10s"))
 
@@ -27,15 +28,11 @@ app.use(cmpression())
 // )
 
 app.use(Cors({ origin: true, credentials: true }))
-app.use(function (req, res, next) {
-  // res.header("Access-Control-Allow-Headers", "*")
-  res.header("Access-Control-Allow-Credentials", true)
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
-  next()
-})
+
 app.set("trust proxy", 1)
 app.use(
   session({
+    secret: "keyboard cat",
     resave: true,
     saveUninitialized: false,
     cookie: {
@@ -44,6 +41,7 @@ app.use(
     },
   })
 )
+
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 
@@ -61,5 +59,5 @@ app.use(Middleware)
 //Routing
 Route(app)
 
-app.use(handleError)
+// app.use(handleError)
 module.exports = app

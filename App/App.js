@@ -16,15 +16,17 @@ app.use(timeout("10s"))
 app.use(cmpression())
 
 // set cors
-app.use(
-  Cors({
-    origin: function (origin, callback) {
-      callback(null, true)
-    },
+// app.use(
+//   Cors({
+//     origin: function (origin, callback) {
+//       callback(null, true)
+//     },
 
-    credentials: true,
-  })
-)
+//     credentials: true,
+//   })
+// )
+
+app.use(Cors({ origin: true, credentials: true }))
 app.use(function (req, res, next) {
   // res.header("Access-Control-Allow-Headers", "*")
   res.header("Access-Control-Allow-Credentials", true)

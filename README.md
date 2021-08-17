@@ -1,4 +1,4 @@
-# Loman | Front-end
+# Loman | Back-end
 
 ## Getting Started
 

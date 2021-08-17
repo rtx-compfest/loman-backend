@@ -60,9 +60,8 @@ describe("User Controller", () => {
   })
 
   it("should can show user selected", async () => {
-    const res = await chai
-      .request(server)
-      .get(`${subUrl}/${loginHelper.id_user}`)
+    const res = await agent
+      .get(`${subUrl}/` + loginHelper.id_user)
       .set("Cookie", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")

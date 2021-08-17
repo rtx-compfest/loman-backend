@@ -108,7 +108,7 @@ router.put("/:id", async function (req, res, next) {
   })
 })
 
-router.delete("/:id", async function (req, res) {
+router.delete("/:id", async function (req, res, next) {
   let data = await userService.remove(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Gagal dihapus"))
   res.status(200).json({

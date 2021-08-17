@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "nodemon ./public/index.js",
-    "test": "mocha --timeout 10000",
+    "test": "mocha --timeout 10000  --exit",
     "testsample": "mocha 'test/*.js' --timeout 10000"
   },
   "prettier": {

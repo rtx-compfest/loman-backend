@@ -1,5 +1,6 @@
 const { db } = require("../Database")
-
+const fs = require("fs")
+const path = require("path")
 class UserService {
   async getAll() {
     try {
@@ -54,7 +55,6 @@ class UserService {
         id: result["id"],
       }
     } catch (e) {
-      console.log(e)
       return null
     }
   }
@@ -62,7 +62,7 @@ class UserService {
     data.id = id
     try {
       return await db.users.update(data)
-    } catch {
+    } catch (e) {
       return null
     }
   }
@@ -70,14 +70,17 @@ class UserService {
   async remove(id) {
     try {
       let data = await db.users.remove(id)
-      fs.unlinkSync(
-        path.resolve(
-          __dirname +
-            `\\..\\public\\uploads\\image\\donation_program\\${data.photos}`
+      if (data.photos) {
+        fs.unlinkSync(
+          path.resolve(
+            __dirname +
+              `\\..\\public\\uploads\\image\\donation_program\\${data.photos}`
+          )
         )
-      )
+      }
+
       return data
-    } catch {
+    } catch (e) {
       return null
     }
   }

@@ -26,6 +26,10 @@ app.use(
   })
 )
 
+res.header("Access-Control-Allow-Headers", "*")
+res.header("Access-Control-Allow-Credentials", true)
+res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
+
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 

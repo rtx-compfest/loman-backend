@@ -35,7 +35,7 @@ describe("Donation category Controller", () => {
     expect(res.status).to.equal(200)
   })
 
-  // after(function (done) {
-  //   loginHelper.removeTestAccount(done, cookies)
-  // })
+  after(function (done) {
+    loginHelper.removeTestAccount(done, cookies)
+  })
 })

@@ -68,12 +68,14 @@ class DonationProgramService {
   async remove(id) {
     try {
       let data = await db.donationProgram.remove(id)
-      fs.unlinkSync(
-        path.resolve(
-          __dirname +
-            `\\..\\public\\uploads\\image\\donation_program\\${data.photos}`
-        )
+      let pathFile = path.resolve(
+        __dirname +
+          `\\..\\public\\uploads\\image\\donation_program\\${data.photos}`
       )
+      if (fs.existsSync(pathFile)) {
+        fs.unlinkSync(pathFile)
+      }
+
       return data
     } catch {
       return null

@@ -27,8 +27,7 @@
   },
   "scripts": {
     "start": "nodemon ./public/index.js",
-    "test": "mocha --timeout 10000",
-    "testsample": "mocha 'test/*.js' --timeout 10000"
+    "test": "mocha 'Test/*.js' --timeout 10000"
   },
   "prettier": {
     "tabWidth": 2,

@@ -14,7 +14,17 @@ const { handleError } = require("../Util/ErrorHandler")
 app.use(timeout("10s"))
 
 app.use(cmpression())
-app.use(Cors())
+
+// app.use(Cors())
+app.use(
+  Cors({
+    origin: function (origin, callback) {
+      callback(null, true)
+    },
+    preflightContinue: true,
+    credentials: true,
+  })
+)
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 
@@ -30,6 +40,18 @@ app.use(Middleware)
 
 //Routing
 Route(app)
+// const axios = require("axios")
 
+// axios
+//   .post(
+//     "https://loman-backend.herokuapp.com/user/login",
+//     { email: "sample@ADMIN1.com", password: "sample123", user_roles: 1 },
+//     {
+//       withCredentials: true,
+//     }
+//   )
+//   .then((res) => {
+//     console.log(res.headers["set-cookie"])
+//   })
 app.use(handleError)
 module.exports = app

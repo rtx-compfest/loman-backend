@@ -66,37 +66,23 @@ router.post(
 // Verify Donation Program Creation
 router.post("/verify/:id", async function (req, res) {
   const data = donationProgramService.update(req.params.id, { status: "1" })
-  if (data !== null) {
-    res.status(200).json({
-      status: true,
-      message: "Donation program verified",
-      data: {},
-    })
-  } else {
-    res.status(500).json({
-      status: false,
-      message: "Verification error",
-      data: {},
-    })
-  }
+  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+  res.status(200).json({
+    status: true,
+    message: "Donation program verified",
+    data: {},
+  })
 })
 
 // Reject Donation Program Creation
 router.post("/reject/:id", async function (req, res) {
-  const data = donationProgramService.update(req.params.id, { status: "0" })
-  if (data !== null) {
-    res.status(200).json({
-      status: true,
-      message: "Donation program rejected",
-      data: {},
-    })
-  } else {
-    res.status(500).json({
-      status: false,
-      message: "Rejection error",
-      data: {},
-    })
-  }
+  const data = donationProgramService.update(req.params.id, { status: "2" })
+  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+  res.status(200).json({
+    status: true,
+    message: "Donation program rejected",
+    data: {},
+  })
 })
 
 //Upload Gambar

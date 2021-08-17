@@ -100,37 +100,23 @@ router.post("/logout", async function (req, res) {
 // Verify fundraiser registration
 router.post("/verify/:id", async function (req, res) {
   const data = userService.update(req.params.id, { status_user: "1" })
-  if (data !== null) {
-    res.status(200).json({
-      status: true,
-      message: "Verify registration successful",
-      data: {},
-    })
-  } else {
-    res.status(500).json({
-      status: false,
-      message: "Verify error",
-      data: {},
-    })
-  }
+  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+  res.status(200).json({
+    status: true,
+    message: "Verify registration successful",
+    data: data,
+  })
 })
 
 // Reject fundraiser registration
 router.post("/reject/:id", async function (req, res) {
-  const data = userService.update(req.params.id, { status_user: "0" })
-  if (data !== null) {
-    res.status(200).json({
-      status: true,
-      message: "Reject registration successful",
-      data: {},
-    })
-  } else {
-    res.status(500).json({
-      status: false,
-      message: "Verify error",
-      data: {},
-    })
-  }
+  const data = userService.update(req.params.id, { status_user: "2" })
+  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+  res.status(200).json({
+    status: true,
+    message: "Reject registration successful",
+    data: data,
+  })
 })
 
 router.put("/:id", async function (req, res, next) {

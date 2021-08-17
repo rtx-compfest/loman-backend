@@ -34,7 +34,7 @@ class DonorDonation {
   }
 
   async total() {
-    return this.db.oneOrNone(
+    return this.db.one(
       "SELECT count(*) FROM " + this.viewName,
       [],
       (a) => +a.count

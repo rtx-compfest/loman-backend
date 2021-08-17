@@ -2,12 +2,15 @@ var express = require("express")
 const { UserService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 var router = express.Router()
-const { generate } = require("../Util/JWT")
+
+const handlerInput = require("../Util/ValidationHandler")
+const validation = require("../Middleware/UserValidation")
+const AdminChecker = require("../Middleware/AdminChecker")
 const userService = new UserService()
 
 router.get("/", async function (req, res, next) {
   let data = await userService.getAll()
-  if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
     status: true,
@@ -16,7 +19,7 @@ router.get("/", async function (req, res, next) {
 
 router.get("/fundraiser", async function (req, res, next) {
   let data = await userService.getFundraiser(req.query)
-  if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
     status: true,
@@ -25,7 +28,7 @@ router.get("/fundraiser", async function (req, res, next) {
 
 router.get("/donor", async function (req, res, next) {
   let data = await userService.getDonor(req.query)
-  if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
     status: true,
@@ -34,7 +37,7 @@ router.get("/donor", async function (req, res, next) {
 
 router.get("/:id", async function (req, res, next) {
   let data = await userService.getById(req.params.id)
-  if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
     status: true,
@@ -42,25 +45,28 @@ router.get("/:id", async function (req, res, next) {
 })
 
 // Registration
-router.post("/register", async function (req, res, next) {
-  let data = await userService.register(req.body)
-  if (!data) return next(new ErrorHandler(404, "Pendaftaran gagal"))
-  res.status(200).json({
-    message: "Pendaftaran Berhasil",
-    data: data,
-    status: true,
-  })
-})
+router.post(
+  "/register",
+  validation(),
+  handlerInput,
+  async function (req, res, next) {
+    let data = await userService.register(req.body)
+    if (!data) return next(new ErrorHandler(404, "Some field is empty"))
+    res.status(200).json({
+      message: "Pendaftaran Berhasil",
+      data: data,
+      status: true,
+    })
+  }
+)
 
 // Login
 router.post("/login", async function (req, res, next) {
   let data = await userService.login(req.body)
-  if (!data) return next(new ErrorHandler(404, "Terjadi kesalahan saat login"))
-  if (data.length < 1)
-    return next(new ErrorHandler(404, "Akun tidak ditemukan"))
-  const token = generate(data)
+  if (!data) return next(new ErrorHandler(404, "Account is not found"))
+
   res
-    .cookie("token", token, {
+    .cookie("token", data.token, {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60000),
       httpOnly: false,
       signed: true,
@@ -70,12 +76,7 @@ router.post("/login", async function (req, res, next) {
     .status(200)
     .json({
       message: "Login successful",
-      data: {
-        name: data["name"],
-        email: data["email"],
-        status_user: data["status_user"],
-        user_roles: data["user_roles"],
-      },
+      data: data.data,
       status: true,
     })
 })
@@ -92,15 +93,15 @@ router.post("/logout", async function (req, res) {
     .status(200)
     .json({
       message: "Logout successful",
-      data: null,
+      data: {},
       status: true,
     })
 })
 
 // Verify fundraiser registration
-router.post("/verify/:id", async function (req, res) {
-  const data = userService.update(req.params.id, { status_user: "1" })
-  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+router.post("/verify/:id", AdminChecker, async function (req, res) {
+  const data = userService.verify(req.params.id)
+  if (!data) next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
     status: true,
     message: "Verify registration successful",
@@ -109,9 +110,9 @@ router.post("/verify/:id", async function (req, res) {
 })
 
 // Reject fundraiser registration
-router.post("/reject/:id", async function (req, res) {
-  const data = userService.update(req.params.id, { status_user: "2" })
-  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+router.post("/reject/:id", AdminChecker, async function (req, res) {
+  const data = userService.reject(req.params.id)
+  if (!data) next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
     status: true,
     message: "Reject registration successful",
@@ -121,9 +122,9 @@ router.post("/reject/:id", async function (req, res) {
 
 router.put("/:id", async function (req, res, next) {
   let data = await userService.update(req.params.id, req.body)
-  if (!data) return next(new ErrorHandler(404, "Gagal diubah"))
+  if (!data) return next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
-    message: "Berhasil diubah",
+    message: "Account is updated",
     data: data,
     status: true,
   })
@@ -131,9 +132,9 @@ router.put("/:id", async function (req, res, next) {
 
 router.delete("/:id", async function (req, res, next) {
   let data = await userService.remove(req.params.id)
-  if (!data) return next(new ErrorHandler(404, "Gagal dihapus"))
+  if (!data) return next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
-    message: "Berhasil dihapus",
+    message: "Account is deleted",
     data: data,
     status: true,
   })

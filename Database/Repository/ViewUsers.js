@@ -8,7 +8,7 @@ class ViewUsers {
   }
 
   async find(id) {
-    return this.db.oneOrNone("select * from ${tableName:name} WHERE id=${id}", {
+    return this.db.one("select * from ${tableName:name} WHERE id=${id}", {
       tableName: this.tableName,
       id: id,
     })
@@ -26,7 +26,7 @@ class ViewUsers {
   }
 
   async total() {
-    return this.db.oneOrNone(
+    return this.db.one(
       "SELECT count(*) FROM " + this.tableName,
       [],
       (a) => +a.count

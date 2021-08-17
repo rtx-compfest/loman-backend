@@ -14,7 +14,18 @@ const { handleError } = require("../Util/ErrorHandler")
 app.use(timeout("10s"))
 
 app.use(cmpression())
-app.use(Cors())
+
+// set cors
+app.use(
+  Cors({
+    origin: function (origin, callback) {
+      callback(null, true)
+    },
+    preflightContinue: true,
+    credentials: true,
+  })
+)
+
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 
@@ -22,6 +33,7 @@ app.use(cookieParser(process.env.JWT_KEY))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+// Read Upload file like image
 app.use(express.static(path.join(__dirname, "..", "public")))
 app.use(express.static(path.join(__dirname, "..", "public", "uploads")))
 
@@ -30,5 +42,6 @@ app.use(Middleware)
 
 //Routing
 Route(app)
+
 app.use(handleError)
 module.exports = app

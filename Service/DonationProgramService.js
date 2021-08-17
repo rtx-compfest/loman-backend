@@ -59,6 +59,16 @@ class DonationProgramService {
   async update(id, data) {
     data.id = id
     try {
+      const { photos } = await db.donationProgram.find(id)
+      if (photos != data.photos) {
+        const pathFile = path.resolve(
+          __dirname +
+            `\\..\\public\\uploads\\image\\donation_program\\${photos}`
+        )
+        if (fs.existsSync(pathFile)) {
+          fs.unlinkSync(pathFile)
+        }
+      }
       return await db.donationProgram.update(data)
     } catch {
       return null
@@ -67,8 +77,8 @@ class DonationProgramService {
 
   async remove(id) {
     try {
-      let data = await db.donationProgram.remove(id)
-      let pathFile = path.resolve(
+      const data = await db.donationProgram.remove(id)
+      const pathFile = path.resolve(
         __dirname +
           `\\..\\public\\uploads\\image\\donation_program\\${data.photos}`
       )
@@ -77,6 +87,28 @@ class DonationProgramService {
       }
 
       return data
+    } catch {
+      return null
+    }
+  }
+
+  async verify(id) {
+    try {
+      return await db.donationProgram.update({
+        id: id,
+        status: "1",
+      })
+    } catch {
+      return null
+    }
+  }
+
+  async reject(id) {
+    try {
+      return await db.donationProgram.update({
+        id: id,
+        status: "2",
+      })
     } catch {
       return null
     }

@@ -10,7 +10,7 @@ class LoginHelper {
     }
     this.dataSample = {
       email: `sample@${ROLE}.com`,
-      password: "sample",
+      password: "sample123",
       name: "sample",
       address: "Indonesia",
       phone: "0888888",

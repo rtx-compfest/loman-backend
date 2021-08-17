@@ -1,10 +1,12 @@
 const { db } = require("../Database")
 
+//Sort Test
 require("./donation_category.controller.test")
 require("./donation_program.controller.test")
 require("./user.controller.test")
 require("./history_transaction.fundraiser.controller.test")
 require("./history_transaction.user.controller.test")
+
 //Reset all id temp
 const tables = ["donation_program", "history_transaction", "users"]
 

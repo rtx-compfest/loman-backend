@@ -1,5 +1,4 @@
 var express = require("express")
-const { db } = require("../Database")
 const { DonationCategoryService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 var router = express.Router()

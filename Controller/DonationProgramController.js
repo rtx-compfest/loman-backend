@@ -1,5 +1,4 @@
 var express = require("express")
-const { db } = require("../Database")
 const UploadImage = require("../Util/UploadImage")
 var router = express.Router()
 const multer = require("multer")
@@ -63,6 +62,42 @@ router.post(
     })
   }
 )
+
+// Verify Donation Program Creation
+router.post("/verify/:id", async function (req, res) {
+  const data = donationProgramService.update(req.params.id, { status: "1" })
+  if (data !== null) {
+    res.status(200).json({
+      status: true,
+      message: "Donation program verified",
+      data: {},
+    })
+  } else {
+    res.status(500).json({
+      status: false,
+      message: "Verification error",
+      data: {},
+    })
+  }
+})
+
+// Reject Donation Program Creation
+router.post("/reject/:id", async function (req, res) {
+  const data = donationProgramService.update(req.params.id, { status: "0" })
+  if (data !== null) {
+    res.status(200).json({
+      status: true,
+      message: "Donation program rejected",
+      data: {},
+    })
+  } else {
+    res.status(500).json({
+      status: false,
+      message: "Rejection error",
+      data: {},
+    })
+  }
+})
 
 //Upload Gambar
 router.post("/:id", uploadImage.any(), async function (req, res, next) {

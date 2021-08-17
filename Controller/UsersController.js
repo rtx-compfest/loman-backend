@@ -1,5 +1,4 @@
 var express = require("express")
-const { db } = require("../Database")
 const { UserService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 var router = express.Router()
@@ -15,7 +14,7 @@ router.get("/", async function (req, res, next) {
   })
 })
 
-router.get("/fundraiser", async function (req, res) {
+router.get("/fundraiser", async function (req, res, next) {
   let data = await userService.getFundraiser(req.query)
   if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
@@ -24,7 +23,7 @@ router.get("/fundraiser", async function (req, res) {
   })
 })
 
-router.get("/donor", async function (req, res) {
+router.get("/donor", async function (req, res, next) {
   let data = await userService.getDonor(req.query)
   if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
@@ -33,7 +32,7 @@ router.get("/donor", async function (req, res) {
   })
 })
 
-router.get("/:id", async function (req, res) {
+router.get("/:id", async function (req, res, next) {
   let data = await userService.getById(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
@@ -98,6 +97,42 @@ router.post("/logout", async function (req, res) {
     })
 })
 
+// Verify fundraiser registration
+router.post("/verify/:id", async function (req, res) {
+  const data = userService.update(req.params.id, { status_user: "1" })
+  if (data !== null) {
+    res.status(200).json({
+      status: true,
+      message: "Verify registration successful",
+      data: {},
+    })
+  } else {
+    res.status(500).json({
+      status: false,
+      message: "Verify error",
+      data: {},
+    })
+  }
+})
+
+// Reject fundraiser registration
+router.post("/reject/:id", async function (req, res) {
+  const data = userService.update(req.params.id, { status_user: "0" })
+  if (data !== null) {
+    res.status(200).json({
+      status: true,
+      message: "Reject registration successful",
+      data: {},
+    })
+  } else {
+    res.status(500).json({
+      status: false,
+      message: "Verify error",
+      data: {},
+    })
+  }
+})
+
 router.put("/:id", async function (req, res, next) {
   let data = await userService.update(req.params.id, req.body)
   if (!data) return next(new ErrorHandler(404, "Gagal diubah"))
@@ -108,7 +143,7 @@ router.put("/:id", async function (req, res, next) {
   })
 })
 
-router.delete("/:id", async function (req, res) {
+router.delete("/:id", async function (req, res, next) {
   let data = await userService.remove(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Gagal dihapus"))
   res.status(200).json({

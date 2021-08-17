@@ -64,7 +64,7 @@ router.post("/login", async function (req, res, next) {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60000),
       httpOnly: false,
       signed: true,
-      sameSite: "strict",
+      sameSite: "none",
       secure: true,
     })
     .status(200)

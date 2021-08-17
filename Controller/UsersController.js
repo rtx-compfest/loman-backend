@@ -71,6 +71,7 @@ router.post("/login", async function (req, res, next) {
       httpOnly: false,
       signed: true,
       sameSite: "none",
+      domain: "localhost",
       secure: true,
     })
     .status(200)

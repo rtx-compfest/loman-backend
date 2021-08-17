@@ -9,7 +9,7 @@ var timeout = require("connect-timeout")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const { handleError } = require("../Util/ErrorHandler")
-
+const session = require("express-session")
 //Timeout
 app.use(timeout("10s"))
 
@@ -34,6 +34,16 @@ app.use(function (req, res, next) {
   next()
 })
 app.set("trust proxy", 1)
+app.use(
+  session({
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+      sameSite: "none", // must be 'none' to enable cross-site delivery
+      secure: true,
+    },
+  })
+)
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 

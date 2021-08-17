@@ -69,9 +69,8 @@ router.post("/login", async function (req, res, next) {
     .cookie("token", data.token, {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60000),
       httpOnly: false,
-      signed: true,
+
       sameSite: "none",
-      domain: "localhost",
       secure: true,
     })
     .status(200)

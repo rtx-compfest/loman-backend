@@ -1,5 +1,4 @@
 const { db } = require("../Database")
-const { ErrorHandler } = require("../Util/ErrorHandler")
 const fs = require("fs")
 const path = require("path")
 class DonationProgramService {

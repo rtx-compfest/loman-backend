@@ -74,7 +74,7 @@ class Users {
   }
 
   async find(id) {
-    return this.db.any("select * from ${tableName:name} WHERE id=${id}", {
+    return this.db.oneOrNone("select * from ${tableName:name} WHERE id=${id}", {
       tableName: this.viewName,
       id: id,
     })

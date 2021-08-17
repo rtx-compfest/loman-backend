@@ -1,5 +1,4 @@
 const { db } = require("../Database")
-const { ErrorHandler } = require("../Util/ErrorHandler")
 
 class DonationCategoryService {
   async getAll() {

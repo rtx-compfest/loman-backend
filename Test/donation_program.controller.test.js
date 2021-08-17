@@ -13,7 +13,7 @@ let idTemp = ""
 const subUrl = "/donation_program"
 const path = require("path")
 const tempFile = fs.readFileSync(
-  path.resolve(__dirname + `\\helper\\image\\test_image.png`)
+  path.resolve(__dirname + `/helper/image/test_image.png`)
 )
 
 describe("Donation program Controller", () => {

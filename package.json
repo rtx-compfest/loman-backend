@@ -6,7 +6,6 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "axios": "^0.21.1",
     "bluebird": "^3.7.2",
     "compression": "^1.7.4",
     "connect-timeout": "^1.9.0",

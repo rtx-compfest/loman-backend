@@ -14,7 +14,7 @@ const { handleError } = require("../Util/ErrorHandler")
 app.use(timeout("10s"))
 
 app.use(cmpression())
-app.use(Cors())
+app.use(Cors({ credentials: true, origin: true }))
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 
@@ -30,5 +30,6 @@ app.use(Middleware)
 
 //Routing
 Route(app)
+
 app.use(handleError)
 module.exports = app

@@ -62,7 +62,7 @@ router.post("/login", async function (req, res, next) {
   res
     .cookie("token", token, {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60000),
-      httpOnly: true,
+      httpOnly: false,
       signed: true,
       sameSite: "strict",
       secure: true,

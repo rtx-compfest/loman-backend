@@ -14,7 +14,7 @@ const { handleError } = require("../Util/ErrorHandler")
 app.use(timeout("10s"))
 
 app.use(cmpression())
-app.use(Cors({ credentials: true, origin: true }))
+app.use(Cors())
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 

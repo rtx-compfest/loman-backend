@@ -2,7 +2,7 @@ var express = require("express")
 const { UserService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 var router = express.Router()
-const { generate } = require("../Util/JWT")
+
 const handlerInput = require("../Util/ValidationHandler")
 const validation = require("../Middleware/UserValidation")
 const AdminChecker = require("../Middleware/AdminChecker")
@@ -65,9 +65,8 @@ router.post("/login", async function (req, res, next) {
   let data = await userService.login(req.body)
   if (!data) return next(new ErrorHandler(404, "Akun tidak ditemukan"))
 
-  const token = generate(data)
   res
-    .cookie("token", token, {
+    .cookie("token", data.token, {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60000),
       httpOnly: false,
       signed: true,
@@ -77,12 +76,7 @@ router.post("/login", async function (req, res, next) {
     .status(200)
     .json({
       message: "Login successful",
-      data: {
-        name: data["name"],
-        email: data["email"],
-        status_user: data["status_user"],
-        user_roles: data["user_roles"],
-      },
+      data: data,
       status: true,
     })
 })
@@ -106,7 +100,7 @@ router.post("/logout", async function (req, res) {
 
 // Verify fundraiser registration
 router.post("/verify/:id", AdminChecker, async function (req, res) {
-  const data = userService.update(req.params.id, { status_user: "1" })
+  const data = userService.verify(req.params.id)
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({
     status: true,
@@ -117,7 +111,7 @@ router.post("/verify/:id", AdminChecker, async function (req, res) {
 
 // Reject fundraiser registration
 router.post("/reject/:id", AdminChecker, async function (req, res) {
-  const data = userService.update(req.params.id, { status_user: "2" })
+  const data = userService.reject(req.params.id)
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({
     status: true,

@@ -53,7 +53,7 @@ describe("History Trasaction Fundraiser Controller", () => {
 
   it("should can withdraw donation program ", async () => {
     const dataWithdraw = {
-      amount: 1000,
+      amount: 0,
       notes: "-",
       isVisible: 1,
     }

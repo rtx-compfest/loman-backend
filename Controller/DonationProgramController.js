@@ -66,7 +66,7 @@ router.post(
 
 // Verify Donation Program Creation
 router.post("/verify/:id", AdminChecker, async function (req, res) {
-  const data = donationProgramService.update(req.params.id, { status: "1" })
+  const data = donationProgramService.verify(req.params.id)
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({
     status: true,
@@ -77,7 +77,7 @@ router.post("/verify/:id", AdminChecker, async function (req, res) {
 
 // Reject Donation Program Creation
 router.post("/reject/:id", AdminChecker, async function (req, res) {
-  const data = donationProgramService.update(req.params.id, { status: "2" })
+  const data = donationProgramService.reject(req.params.id)
   if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
   res.status(200).json({
     status: true,

@@ -20,7 +20,11 @@ const { db } = require("../Database")
 const tempFile = fs.readFileSync(
   path.resolve(__dirname + `/helper/image/test_image.png`)
 )
-
+const body = {
+  amount: 1000,
+  notes: "-",
+  isVisible: 1,
+}
 describe("History Trasaction Donor Controller", () => {
   before(function (done) {
     loginHelper.initAccount((token) => {
@@ -51,11 +55,6 @@ describe("History Trasaction Donor Controller", () => {
   })
 
   it("should can donate program", async () => {
-    const body = {
-      amount: 1000,
-      notes: "-",
-      isVisible: 1,
-    }
     const res = await agent
       .post("/wallet/donate/" + idTempDonation)
       .set("Cookie", cookiesDonor)
@@ -67,17 +66,11 @@ describe("History Trasaction Donor Controller", () => {
   })
 
   it("should can topup", async () => {
-    const body = {
-      amount: 1000,
-      notes: "-",
-      isVisible: 1,
-    }
     const res = await agent
       .post("/wallet/topup/")
       .set("Cookie", cookiesDonor)
       .send(body)
     await db.historyTransaction.remove(res.body.data.id)
-
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)

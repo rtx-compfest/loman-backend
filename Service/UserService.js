@@ -1,6 +1,6 @@
 const { db } = require("../Database")
-const fs = require("fs")
-const path = require("path")
+const { generate } = require("../Util/JWT")
+
 class UserService {
   async getAll() {
     try {
@@ -41,7 +41,17 @@ class UserService {
 
   async login(data) {
     try {
-      return await db.users.findValue(data)
+      const dataUser = await db.users.findValue(data)
+      const token = generate(data)
+      return {
+        data: {
+          name: dataUser["name"],
+          email: dataUser["email"],
+          status_user: dataUser["status_user"],
+          user_roles: dataUser["user_roles"],
+        },
+        token: token,
+      }
     } catch (e) {
       return null
     }
@@ -70,17 +80,30 @@ class UserService {
   async remove(id) {
     try {
       let data = await db.users.remove(id)
-      if (data.photos) {
-        fs.unlinkSync(
-          path.resolve(
-            __dirname +
-              `\\..\\public\\uploads\\image\\donation_program\\${data.photos}`
-          )
-        )
-      }
-
       return data
     } catch (e) {
+      return null
+    }
+  }
+
+  async verify(id) {
+    try {
+      return await db.users.update({
+        id: id,
+        status_user: "1",
+      })
+    } catch {
+      return null
+    }
+  }
+
+  async reject(id) {
+    try {
+      return await db.users.update({
+        id: id,
+        status_user: "2",
+      })
+    } catch {
       return null
     }
   }

@@ -81,6 +81,28 @@ class DonationProgramService {
       return null
     }
   }
+
+  async verify(id) {
+    try {
+      return await db.donationProgram.update({
+        id: id,
+        status: "1",
+      })
+    } catch {
+      return null
+    }
+  }
+
+  async reject(id) {
+    try {
+      return await db.donationProgram.update({
+        id: id,
+        status: "2",
+      })
+    } catch {
+      return null
+    }
+  }
 }
 
 module.exports = DonationProgramService

@@ -5,9 +5,13 @@ var path = require("path")
 const Middleware = require("../Middleware/Middleware")
 const Route = require("../Routes/Routes")
 const Cors = require("cors")
-
+var timeout = require("connect-timeout")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
+const { handleError } = require("../Util/ErrorHandler")
+
+//Timeout
+app.use(timeout("10s"))
 
 app.use(cmpression())
 app.use(Cors())
@@ -26,5 +30,5 @@ app.use(Middleware)
 
 //Routing
 Route(app)
-
+app.use(handleError)
 module.exports = app

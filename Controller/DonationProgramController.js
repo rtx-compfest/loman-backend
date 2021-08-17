@@ -3,79 +3,59 @@ const { db } = require("../Database")
 const UploadImage = require("../Util/UploadImage")
 var router = express.Router()
 const multer = require("multer")
+const { DonationProgramService } = require("../Service")
+const { ErrorHandler } = require("../Util/ErrorHandler")
 const uploadImage = new UploadImage(multer, "donation_program").upload
+const donationProgramService = new DonationProgramService()
 
-router.get("/", async function (req, res) {
-  let data = await db.donationProgram.findByNameAndCategory(
-    req.query.category,
-    req.query.nama,
-    req.query.orderBy,
-    req.query.sort
+router.get("/", async function (req, res, next) {
+  let data = await donationProgramService.getAll(req.query)
+  if (!data) next(new ErrorHandler(404, "Data tidak ditemukan"))
+  res.status(200).json({
+    data: data,
+    status: true,
+  })
+})
+
+router.get("/fundraiser/:id", async function (req, res, next) {
+  let data = await donationProgramService.getByFundraiser(
+    req.params.id,
+    req.query
   )
+  if (!data) next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
     data: data,
     status: true,
   })
 })
 
-router.get("/fundraiser/:id", async function (req, res) {
-  let id = req.params.id
-  let data = await db.donationProgram.findByFundanaiser(
-    id,
-    req.query.nama,
-    req.query.orderBy,
-    req.query.sort
-  )
+router.get("/donor/:id", async function (req, res, next) {
+  let data = await donationProgramService.getByUser(req.params.id)
+  if (!data) next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
     data: data,
     status: true,
   })
 })
 
-router.get("/donor/:id", async function (req, res) {
-  let id = req.params.id
-  let data = await db.donorDonation.findByUser(id)
+router.get("/:id", async function (req, res, next) {
+  let data = await donationProgramService.getById(req.params.id)
+  if (!data) next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
     data: data,
     status: true,
   })
 })
 
-router.get("/:id", async function (req, res) {
-  let id = req.params.id
-  try {
-    let data = await db.donationProgram.find(id)
-
-    data.donor = await db.donorDonation.findByDonationProgram(id)
-    res.status(200).json({
-      data: data,
-      status: true,
-    })
-  } catch (e) {
-    res.status(200).json({
-      data: {},
-      status: false,
-    })
-  }
-})
-
-router.post("/", uploadImage.single("photos"), async function (req, res) {
-  req.body.status = 0
+router.post("/", uploadImage.single("photos"), async function (req, res, next) {
   req.body.photos = req.file.filename
-
-  let data = await db.donationProgram.add(req.body)
-  if (data) {
-    res.status(200).json({
-      message: "Berhasil dimasukkan",
-      data: data,
-      status: true,
-    })
-  } else {
-    res.status(500).json({
-      message: "Terjadi Kesalahan",
-      status: false,
-    })
-  }
+  let data = await donationProgramService.add(req.body)
+  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat input"))
+  res.status(200).json({
+    message: "Berhasil dimasukkan",
+    data: data,
+    status: true,
+  })
 })
 
 //Upload Gambar
@@ -86,28 +66,22 @@ router.post("/:id", uploadImage.any(), async function (req, res, next) {
   next()
 })
 
-router.post("/:id", async function (req, res) {
-  req.body.id = req.params.id
+router.post("/:id", async function (req, res, next) {
   if (req.file) {
     req.body.photos = req.file.filename
   }
-  let data = await db.donationProgram.update(req.body)
-  if (data) {
-    res.status(200).json({
-      message: "Berhasil diubah",
-      data: data,
-      status: true,
-    })
-  } else {
-    res.status(500).json({
-      message: "Terjadi Kesalahan",
-      status: false,
-    })
-  }
+  let data = await donationProgramService.update(req.params.id, req.body)
+  if (!data) next(new ErrorHandler(404, "Terjadi kesalaahan saat pengubahan"))
+  res.status(200).json({
+    message: "Berhasil diubah",
+    data: data,
+    status: true,
+  })
 })
 
-router.delete("/:id", async function (req, res) {
-  let data = await db.donationProgram.remove(req.params.id)
+router.delete("/:id", async function (req, res, next) {
+  let data = await donationProgramService.remove(req.params.id)
+  if (!data) next(new ErrorHandler(404, "Terjadi kesalahan saat penghapusan"))
   res.status(200).json({
     message: "Berhasil dihapus",
     data: data,

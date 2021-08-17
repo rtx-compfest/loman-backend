@@ -1,17 +1,22 @@
 var express = require("express")
 const { db } = require("../Database")
+const { DonationCategoryService } = require("../Service")
+const { ErrorHandler } = require("../Util/ErrorHandler")
 var router = express.Router()
+const donationCategoryService = new DonationCategoryService()
 
-router.get("/", async function (req, res) {
-  let data = await db.donationCategory.all()
+router.get("/", async function (req, res, next) {
+  let data = await donationCategoryService.getAll()
+  if (!data) next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
     data: data,
     status: true,
   })
 })
-router.get("/:id", async function (req, res) {
-  let id = req.params.id
-  let data = await db.donationCategory.find(id)
+
+router.get("/:id", async function (req, res, next) {
+  let data = await donationCategoryService.getById(req.params.id)
+  if (!data) next(new ErrorHandler(404, "Data tidak ditemukan"))
   res.status(200).json({
     data: data,
     status: true,

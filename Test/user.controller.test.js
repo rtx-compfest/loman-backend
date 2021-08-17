@@ -22,6 +22,22 @@ describe("User Controller", () => {
     })
   })
 
+  it("should can not login wrong password", async () => {
+    const res = await agent
+      .post(subUrl + "/login")
+      .send({ email: "fake@email.com", password: "fake1234" })
+    expect(res.body).to.have.property("status")
+    expect(res.status).to.equal(404)
+  })
+
+  it("should can not register same email", async () => {
+    const res = await agent
+      .post(subUrl + "/register")
+      .send(loginFundraiser.dataSample)
+    expect(res.body).to.have.property("status")
+    expect(res.status).to.equal(406)
+  })
+
   it("should can show users", async () => {
     const res = await agent.get(subUrl).set("Cookie", cookiesFundraiser)
     expect(res.body).to.have.property("data")

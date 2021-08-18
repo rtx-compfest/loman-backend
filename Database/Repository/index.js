@@ -4,6 +4,5 @@ module.exports = {
   Users: require("./Users"),
   HistoryTransaction: require("./HistoryTransaction"),
   DonationCategory: require("./DonationCategory"),
-  ViewUsers: require("./ViewUsers"),
   DonorDonation: require("./DonorDonation"),
 }

@@ -1,5 +1,5 @@
 const { verify } = require("../Util/JWT")
-const Middleware = function (req, res, next) {
+const AuthChecker = function (req, res, next) {
   let url = req.path.split("/")
   if (url.length > 1) {
     if (
@@ -15,4 +15,4 @@ const Middleware = function (req, res, next) {
   }
 }
 
-module.exports = Middleware
+module.exports = AuthChecker

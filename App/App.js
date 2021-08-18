@@ -2,7 +2,7 @@ const express = require("express")
 const app = express()
 const cmpression = require("compression")
 var path = require("path")
-const { Middleware } = require("../Middleware")
+const { AuthChecker } = require("../Middleware")
 const Route = require("../Routes/Routes")
 const Cors = require("cors")
 var timeout = require("connect-timeout")
@@ -41,8 +41,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "..", "public")))
 app.use(express.static(path.join(__dirname, "..", "public", "uploads")))
 
-// JWT Middleware
-app.use(Middleware)
+// JWT Auth Middleware
+app.use(AuthChecker)
 
 //Routing
 Route(app)

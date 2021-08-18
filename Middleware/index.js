@@ -2,6 +2,6 @@ module.exports = {
   AdminChecker: require("./AdminChecker"),
   DonorChecker: require("./DonorChecker"),
   FundraiserChecker: require("./FundraiserChecker"),
-  Middleware: require("./Middleware"),
+  AuthChecker: require("./AuthChecker"),
   UserValidation: require("./UserValidation"),
 }

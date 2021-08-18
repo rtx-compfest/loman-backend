@@ -27,7 +27,9 @@ app.use(cmpression())
 //   })
 // )
 
-app.use(Cors({ origin: true, credentials: true }))
+app.use(
+  Cors({ origin: "*", credentials: true, exposedHeaders: ["set-cookie"] })
+)
 
 app.set("trust proxy", 1)
 app.use(

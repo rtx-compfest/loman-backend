@@ -42,7 +42,7 @@ class UserService {
   async login(data) {
     try {
       const dataUser = await db.users.findValue(data)
-      const token = generate(data)
+      const token = generate(dataUser)
       return {
         data: {
           name: dataUser["name"],

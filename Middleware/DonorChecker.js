@@ -4,7 +4,7 @@ const DonorChecker = function (req, res, next) {
     next()
     return
   }
-  next(new ErrorHandler(401, "Account Not has Access"))
+  return next(new ErrorHandler(401, "Account Not has Access"))
 }
 
 module.exports = DonorChecker

@@ -23,10 +23,10 @@ function verify(req, res, next) {
       req.user = decoded
       next()
     } else {
-      next(new ErrorHandler(401, "Token is not valid"))
+      return next(new ErrorHandler(401, "Token is not valid"))
     }
   } catch (err) {
-    next(new ErrorHandler(401, "Token is not valid"))
+    return next(new ErrorHandler(401, "Token is not valid"))
   }
 }
 

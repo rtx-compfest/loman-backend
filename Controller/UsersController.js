@@ -101,7 +101,7 @@ router.post("/logout", async function (req, res) {
 // Verify fundraiser registration
 router.post("/verify/:id", AdminChecker, async function (req, res, next) {
   const data = userService.verify(req.params.id)
-  if (!data) next(new ErrorHandler(404, "Account is not found"))
+  if (!data) return next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
     status: true,
     message: "Verify registration successful",
@@ -112,7 +112,7 @@ router.post("/verify/:id", AdminChecker, async function (req, res, next) {
 // Reject fundraiser registration
 router.post("/reject/:id", AdminChecker, async function (req, res, next) {
   const data = userService.reject(req.params.id)
-  if (!data) next(new ErrorHandler(404, "Account is not found"))
+  if (!data) return next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
     status: true,
     message: "Reject registration successful",

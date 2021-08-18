@@ -12,7 +12,6 @@ router.get("/", async function (req, res, next) {
     data: data,
     status: true,
   })
-  return
 })
 
 router.get("/:id", async function (req, res, next) {
@@ -22,7 +21,6 @@ router.get("/:id", async function (req, res, next) {
     data: data,
     status: true,
   })
-  return
 })
 
 module.exports = router

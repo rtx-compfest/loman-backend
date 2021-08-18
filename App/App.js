@@ -1,15 +1,15 @@
 const express = require("express")
 const app = express()
 const cmpression = require("compression")
-var path = require("path")
+const path = require("path")
 const { AuthChecker } = require("../Middleware")
 const Route = require("../Routes/Routes")
 const Cors = require("cors")
-var timeout = require("connect-timeout")
+const timeout = require("connect-timeout")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const { handleError } = require("../Util/ErrorHandler")
-var session = require("express-session")
+const session = require("express-session")
 
 //Timeout
 app.use(timeout("10s"))

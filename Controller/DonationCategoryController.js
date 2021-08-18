@@ -1,8 +1,8 @@
 var express = require("express")
 const { DonationCategoryService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
-var router = express.Router()
 
+var router = express.Router()
 const donationCategoryService = new DonationCategoryService()
 
 router.get("/", async function (req, res, next) {

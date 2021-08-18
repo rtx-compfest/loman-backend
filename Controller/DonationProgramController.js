@@ -1,11 +1,11 @@
 var express = require("express")
 const UploadImage = require("../Util/UploadImage")
-var router = express.Router()
 const multer = require("multer")
 const { DonationProgramService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
-const FundraiserChecker = require("../Middleware/FundraiserChecker")
-const AdminChecker = require("../Middleware/AdminChecker")
+const { FundraiserChecker, AdminChecker } = require("../Middleware")
+
+var router = express.Router()
 const uploadImage = new UploadImage(multer, "donation_program").upload
 const donationProgramService = new DonationProgramService()
 
@@ -65,7 +65,7 @@ router.post(
 )
 
 // Verify Donation Program Creation
-router.post("/verify/:id", AdminChecker, async function (req, res) {
+router.post("/verify/:id", AdminChecker, async function (req, res, next) {
   const data = donationProgramService.verify(req.params.id)
   if (!data) next(new ErrorHandler(404, "Donation program not found"))
   res.status(200).json({
@@ -76,7 +76,7 @@ router.post("/verify/:id", AdminChecker, async function (req, res) {
 })
 
 // Reject Donation Program Creation
-router.post("/reject/:id", AdminChecker, async function (req, res) {
+router.post("/reject/:id", AdminChecker, async function (req, res, next) {
   const data = donationProgramService.reject(req.params.id)
   if (!data) next(new ErrorHandler(404, "Donation program not found"))
   res.status(200).json({

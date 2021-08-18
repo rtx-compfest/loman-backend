@@ -2,37 +2,25 @@ const express = require("express")
 const app = express()
 const cmpression = require("compression")
 var path = require("path")
-const Middleware = require("../Middleware/Middleware")
+const { Middleware } = require("../Middleware")
 const Route = require("../Routes/Routes")
 const Cors = require("cors")
 var timeout = require("connect-timeout")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const { handleError } = require("../Util/ErrorHandler")
-
 var session = require("express-session")
+
 //Timeout
 app.use(timeout("10s"))
-
 app.use(cmpression())
-
-// set cors
-// app.use(
-//   Cors({
-//     origin: function (origin, callback) {
-//       callback(null, true)
-//     },
-
-//     credentials: true,
-//   })
-// )
 
 app.use(Cors({ origin: true, credentials: true }))
 
 app.set("trust proxy", 1)
 app.use(
   session({
-    secret: "keyboard cat",
+    secret: process.env.SESS_KEY,
     resave: true,
     saveUninitialized: false,
     cookie: {
@@ -59,5 +47,5 @@ app.use(Middleware)
 //Routing
 Route(app)
 
-// app.use(handleError)
+app.use(handleError)
 module.exports = app

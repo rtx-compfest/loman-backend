@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const { ErrorHandler } = require("./ErrorHandler")
 require("dotenv").config()
 var key = process.env.JWT_KEY
 var projectName = process.env.PROJECT_NAME
@@ -8,9 +9,9 @@ function generate(data) {
     {
       userId: data["id"],
       role: data["user_roles"],
-      project: projectName
+      project: projectName,
     },
-    key,
+    key
   )
 }
 
@@ -22,11 +23,10 @@ function verify(req, res, next) {
       req.user = decoded
       next()
     } else {
-      res.status(401).json({ status: false, message: "Token is not valid" })
+      next(new ErrorHandler(401, "Token is not valid"))
     }
   } catch (err) {
-    next()
-    // res.status(401).json({ status: false, message: "Token is not valid" })
+    next(new ErrorHandler(401, "Token is not valid"))
   }
 }
 

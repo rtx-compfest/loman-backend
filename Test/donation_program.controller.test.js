@@ -85,11 +85,6 @@ describe("Donation program Controller", () => {
     expect(res.status).to.equal(200)
   })
 
-  // it("should can show donation program selected not found", async () => {
-  //   const res = await agent.get(`${subUrl}/0`).set("Cookie", cookiesFundraiser)
-  //   expect(res.status).to.equal(404)
-  // })
-
   it("should can show donation program selected found", async () => {
     const res = await agent
       .get(`${subUrl}/${idTemp}`)

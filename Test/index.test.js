@@ -1,6 +1,7 @@
 const { db } = require("../Database")
 
 //Sort Test
+require("./auth.checker.test")
 require("./donation_category.controller.test")
 require("./donation_program.controller.test")
 require("./user.controller.test")

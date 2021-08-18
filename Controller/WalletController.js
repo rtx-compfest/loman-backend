@@ -1,11 +1,13 @@
 var express = require("express")
-const { db } = require("../Database")
-var router = express.Router()
-const AdminChecker = require("../Middleware/AdminChecker")
-const DonorChecker = require("../Middleware/DonorChecker")
-const FundraiserChecker = require("../Middleware/FundraiserChecker")
+const {
+  AdminChecker,
+  DonorChecker,
+  FundraiserChecker,
+} = require("../Middleware")
 const { WalletService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
+
+var router = express.Router()
 const walletService = new WalletService()
 // Topup wallet
 router.post("/topup", DonorChecker, async function (req, res, next) {

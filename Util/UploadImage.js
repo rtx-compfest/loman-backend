@@ -23,7 +23,7 @@ class UploadImage {
           cb(null, false)
           return cb(new Error("Only .png, .jpg and .jpeg format allowed!"))
         }
-      }
+      },
     })
   }
 }

@@ -1,11 +1,10 @@
 var express = require("express")
 const { UserService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
-var router = express.Router()
-
 const handlerInput = require("../Util/ValidationHandler")
-const validation = require("../Middleware/UserValidation")
-const AdminChecker = require("../Middleware/AdminChecker")
+const { AdminChecker, UserValidation } = require("../Middleware")
+
+var router = express.Router()
 const userService = new UserService()
 
 router.get("/", async function (req, res, next) {
@@ -47,7 +46,7 @@ router.get("/:id", async function (req, res, next) {
 // Registration
 router.post(
   "/register",
-  validation(),
+  UserValidation(),
   handlerInput,
   async function (req, res, next) {
     let data = await userService.register(req.body)
@@ -100,7 +99,7 @@ router.post("/logout", async function (req, res) {
 })
 
 // Verify fundraiser registration
-router.post("/verify/:id", AdminChecker, async function (req, res) {
+router.post("/verify/:id", AdminChecker, async function (req, res, next) {
   const data = userService.verify(req.params.id)
   if (!data) next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
@@ -111,7 +110,7 @@ router.post("/verify/:id", AdminChecker, async function (req, res) {
 })
 
 // Reject fundraiser registration
-router.post("/reject/:id", AdminChecker, async function (req, res) {
+router.post("/reject/:id", AdminChecker, async function (req, res, next) {
   const data = userService.reject(req.params.id)
   if (!data) next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({

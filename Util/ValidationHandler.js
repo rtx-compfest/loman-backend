@@ -1,23 +1,21 @@
-const { validationResult } = require("express-validator");
+const { validationResult } = require("express-validator")
+const { ErrorHandler } = require("./ErrorHandler")
 
 const resultValidation = validationResult.withDefaults({
   formatter: (error) => {
     return {
       message: error.msg,
-    };
+    }
   },
-});
+})
 
 function handlerInput(req, res, next) {
-  let error = resultValidation(req);
+  let error = resultValidation(req)
   if (!error.isEmpty()) {
-    res.status(406).json({
-      status: false,
-      errorMessage: error.array()[0].message,
-    });
+    next(new ErrorHandler(406, error.array()[0].message))
   } else {
-    next();
+    next()
   }
 }
 
-module.exports = handlerInput;
+module.exports = handlerInput

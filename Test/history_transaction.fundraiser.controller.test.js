@@ -5,7 +5,7 @@ const LoginHelper = require("./helper/LoginHelper")
 const expect = chai.expect
 
 chai.use(chaiHttp)
-var agent = chai.request.agent(server)
+const agent = chai.request.agent(server)
 const loginHelper = new LoginHelper(agent, "ADMIN")
 const loginFundraiser = new LoginHelper(agent, "FUNDRAISER")
 const fs = require("fs")

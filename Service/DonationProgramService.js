@@ -17,7 +17,7 @@ class DonationProgramService {
 
   async getById(id) {
     try {
-      let data = await db.donationProgram.find(id)
+      const data = await db.donationProgram.find(id)
       data.donor = await db.donorDonation.findByDonationProgram(id)
       return data
     } catch (e) {

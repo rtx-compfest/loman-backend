@@ -1,14 +1,14 @@
-var express = require("express")
+const express = require("express")
 const { UserService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 const handlerInput = require("../Util/ValidationHandler")
 const { AdminChecker, UserValidation } = require("../Middleware")
 
-var router = express.Router()
+const router = express.Router()
 const userService = new UserService()
 
 router.get("/", async function (req, res, next) {
-  let data = await userService.getAll()
+  const data = await userService.getAll()
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
@@ -17,7 +17,7 @@ router.get("/", async function (req, res, next) {
 })
 
 router.get("/fundraiser", async function (req, res, next) {
-  let data = await userService.getFundraiser(req.query)
+  const data = await userService.getFundraiser(req.query)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
@@ -26,7 +26,7 @@ router.get("/fundraiser", async function (req, res, next) {
 })
 
 router.get("/donor", async function (req, res, next) {
-  let data = await userService.getDonor(req.query)
+  const data = await userService.getDonor(req.query)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
@@ -35,7 +35,7 @@ router.get("/donor", async function (req, res, next) {
 })
 
 router.get("/:id", async function (req, res, next) {
-  let data = await userService.getById(req.params.id)
+  const data = await userService.getById(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
@@ -49,7 +49,7 @@ router.post(
   UserValidation(),
   handlerInput,
   async function (req, res, next) {
-    let data = await userService.register(req.body)
+    const data = await userService.register(req.body)
     if (!data) return next(new ErrorHandler(404, "Some field is empty"))
     res.status(200).json({
       message: "Pendaftaran Berhasil",
@@ -61,7 +61,7 @@ router.post(
 
 // Login
 router.post("/login", async function (req, res, next) {
-  let data = await userService.login(req.body)
+  const data = await userService.login(req.body)
   if (!data) return next(new ErrorHandler(404, "Account is not found"))
 
   res
@@ -121,7 +121,7 @@ router.post("/reject/:id", AdminChecker, async function (req, res, next) {
 })
 
 router.put("/:id", async function (req, res, next) {
-  let data = await userService.update(req.params.id, req.body)
+  const data = await userService.update(req.params.id, req.body)
   if (!data) return next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
     message: "Account is updated",
@@ -131,7 +131,7 @@ router.put("/:id", async function (req, res, next) {
 })
 
 router.delete("/:id", async function (req, res, next) {
-  let data = await userService.remove(req.params.id)
+  const data = await userService.remove(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Account is not found"))
   res.status(200).json({
     message: "Account is deleted",

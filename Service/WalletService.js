@@ -58,6 +58,10 @@ class WalletService {
 
   async verify(id) {
     try {
+      const { credit, donation_id } = await db.historyTransaction.find(id)
+      const { amount } = await db.donationProgram.find(donation_id)
+      if (credit > amount) return { limit: true }
+
       const body = {
         id: id,
         status_transaction: 1,

@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken")
 const { ErrorHandler } = require("./ErrorHandler")
 require("dotenv").config()
-var key = process.env.JWT_KEY
-var projectName = process.env.PROJECT_NAME
+const key = process.env.JWT_KEY
+const projectName = process.env.PROJECT_NAME
 
 function generate(data) {
   return jwt.sign(

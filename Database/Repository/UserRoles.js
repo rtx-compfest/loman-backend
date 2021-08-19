@@ -19,7 +19,7 @@ class UserRoles {
   }
 
   async update(values) {
-    let body = new FilterUpdate(values, this.pgp, this.allowedColumns)
+    const body = new FilterUpdate(values, this.pgp, this.allowedColumns)
     return this.db.one("UPDATE public.$1:name set $2 WHERE id=$3 RETURNING *", [
       this.tableName,
       body,

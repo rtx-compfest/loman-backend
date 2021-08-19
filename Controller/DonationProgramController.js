@@ -1,17 +1,17 @@
-var express = require("express")
+const express = require("express")
 const UploadImage = require("../Util/UploadImage")
 const multer = require("multer")
 const { DonationProgramService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 const { FundraiserChecker, AdminChecker } = require("../Middleware")
 
-var router = express.Router()
+const router = express.Router()
 
 const uploadImage = new UploadImage(multer, "donation_program").upload
 const donationProgramService = new DonationProgramService()
 
 router.get("/", async function (req, res, next) {
-  let data = await donationProgramService.getAll(req.query)
+  const data = await donationProgramService.getAll(req.query)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
@@ -20,7 +20,7 @@ router.get("/", async function (req, res, next) {
 })
 
 router.get("/fundraiser/:id", async function (req, res, next) {
-  let data = await donationProgramService.getByFundraiser(
+  const data = await donationProgramService.getByFundraiser(
     req.params.id,
     req.query
   )
@@ -32,7 +32,7 @@ router.get("/fundraiser/:id", async function (req, res, next) {
 })
 
 router.get("/donor/:id", async function (req, res, next) {
-  let data = await donationProgramService.getByUser(req.params.id)
+  const data = await donationProgramService.getByUser(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
@@ -41,7 +41,7 @@ router.get("/donor/:id", async function (req, res, next) {
 })
 
 router.get("/:id", async function (req, res, next) {
-  let data = await donationProgramService.getById(req.params.id)
+  const data = await donationProgramService.getById(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
     data: data,
@@ -55,7 +55,7 @@ router.post(
   FundraiserChecker,
   async function (req, res, next) {
     req.body.photos = req.file.filename
-    let data = await donationProgramService.add(req.body)
+    const data = await donationProgramService.add(req.body)
     if (!data) return next(new ErrorHandler(404, "Some field is need filled"))
     res.status(200).json({
       message: "Berhasil dimasukkan",
@@ -99,7 +99,7 @@ router.post("/:id", async function (req, res, next) {
   if (req.file) {
     req.body.photos = req.file.filename
   }
-  let data = await donationProgramService.update(req.params.id, req.body)
+  const data = await donationProgramService.update(req.params.id, req.body)
   if (!data) return next(new ErrorHandler(404, "Some field is empty"))
   res.status(200).json({
     message: "Berhasil diubah",
@@ -109,7 +109,7 @@ router.post("/:id", async function (req, res, next) {
 })
 
 router.delete("/:id", async function (req, res, next) {
-  let data = await donationProgramService.remove(req.params.id)
+  const data = await donationProgramService.remove(req.params.id)
   if (!data) return next(new ErrorHandler(404, "Donation Program is not found"))
   res.status(200).json({
     message: "Berhasil dihapus",

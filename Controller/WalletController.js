@@ -1,4 +1,4 @@
-var express = require("express")
+const express = require("express")
 const {
   AdminChecker,
   DonorChecker,
@@ -7,7 +7,7 @@ const {
 const { WalletService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 
-var router = express.Router()
+const router = express.Router()
 const walletService = new WalletService()
 // Topup wallet
 router.post("/topup", DonorChecker, async function (req, res, next) {
@@ -72,7 +72,9 @@ router.post(
 // Admin verify wd request
 router.post("/verify/:id", AdminChecker, async function (req, res, next) {
   const data = await walletService.verify(req.params.id)
+
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
+  if (data.limit) return next(new ErrorHandler(404, "Unficient amount"))
   res.status(200).json({
     message: "Verify Withdraw successful",
     data: {

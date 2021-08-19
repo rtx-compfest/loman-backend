@@ -58,11 +58,11 @@ class UserService {
   }
   async register(data) {
     try {
-      const result = await db.users.add(data)
+      const { email, status_user, id } = await db.users.add(data)
       return {
-        email: result["email"],
-        status_user: result["status_user"],
-        id: result["id"],
+        email,
+        status_user,
+        id,
       }
     } catch (e) {
       return null
@@ -79,7 +79,7 @@ class UserService {
 
   async remove(id) {
     try {
-      let data = await db.users.remove(id)
+      const data = await db.users.remove(id)
       return data
     } catch (e) {
       return null

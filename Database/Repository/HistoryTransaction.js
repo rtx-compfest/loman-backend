@@ -32,7 +32,7 @@ class HistoryTransaction {
   }
 
   async update(values) {
-    let body = new FilterUpdate(values, this.pgp, this.allowedColumns)
+    const body = new FilterUpdate(values, this.pgp, this.allowedColumns)
     return this.db.one("UPDATE public.$1:name set $2 WHERE id=$3 RETURNING *", [
       this.tableName,
       body,
@@ -47,14 +47,11 @@ class HistoryTransaction {
     ])
   }
 
-  async find(donation_id) {
-    return this.db.any(
-      "select * from ${tableName:name} WHERE donation_id=${id}",
-      {
-        tableName: this.tableName,
-        id: donation_id,
-      }
-    )
+  async find(id) {
+    return this.db.one("select * from ${tableName:name} WHERE id=${id}", {
+      tableName: this.tableName,
+      id: id,
+    })
   }
 
   async all(orderBy = "id", sort = "ASC") {

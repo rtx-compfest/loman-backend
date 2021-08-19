@@ -40,7 +40,7 @@ class LoginHelper {
       .post("/user/login")
       .send(this.dataSample)
       .end((err, res) => {
-        let cookies = setCookie.parse(res, {
+        const cookies = setCookie.parse(res, {
           decodeValues: true,
         })
         if (err) return token("token=")

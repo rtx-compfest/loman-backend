@@ -22,7 +22,7 @@ async function checkEmail(email, { req }) {
   } else {
     sql = "select email from users where email = $1"
   }
-  let res = await db.query(sql, [email])
+  const res = await db.query(sql, [email])
   return new Promise((resolve, reject) => {
     if (res.length > 0) {
       reject("Email is exists")

@@ -11,7 +11,7 @@ const loginAdmin = new LoginHelper(agent)
 
 let cookiesFundraiser, cookiesAdmin
 
-describe("Check Auth", () => {
+describe("Check Auth All Controller", () => {
   before(function (done) {
     loginFundraiser.initAccount((token) => {
       cookiesFundraiser = token

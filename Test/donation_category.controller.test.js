@@ -19,14 +19,14 @@ describe("Donation category Controller", () => {
   })
 
   it("should can show donation category", async () => {
-    const res = await agent.get(subUrl).set("Cookie", cookies)
+    const res = await agent.get(subUrl).set("Authorization", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
   })
 
   it("should can show donation category selected", async () => {
-    const res = await agent.get(`${subUrl}/1`).set("Cookie", cookies)
+    const res = await agent.get(`${subUrl}/1`).set("Authorization", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)

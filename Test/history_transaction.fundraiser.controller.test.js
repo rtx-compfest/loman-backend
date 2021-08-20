@@ -36,7 +36,7 @@ describe("History Trasaction Fundraiser Controller", () => {
   it("should can post donation program", async () => {
     const res = await agent
       .post(`/donation_program`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation")
       .field("max_date", "2021-09-01")
@@ -60,7 +60,7 @@ describe("History Trasaction Fundraiser Controller", () => {
     const res = await agent
       .post(`/wallet/withdraw/${idTempDonation}`)
       .send(dataWithdraw)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     idTempTransaction = res.body.data.id
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
@@ -70,7 +70,7 @@ describe("History Trasaction Fundraiser Controller", () => {
   it("should can verify donation program ", async () => {
     const res = await agent
       .post(`/wallet/verify/${idTempTransaction}`)
-      .set("Cookie", cookies)
+      .set("Authorization", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -79,7 +79,7 @@ describe("History Trasaction Fundraiser Controller", () => {
   it("should can reject donation program ", async () => {
     const res = await agent
       .post(`/wallet/reject/${idTempTransaction}`)
-      .set("Cookie", cookies)
+      .set("Authorization", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -89,7 +89,7 @@ describe("History Trasaction Fundraiser Controller", () => {
     await db.historyTransaction.remove(idTempTransaction)
     const res = await agent
       .delete(`/donation_program/${idTempDonation}`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)

@@ -40,11 +40,8 @@ class LoginHelper {
       .post("/user/login")
       .send(this.dataSample)
       .end((err, res) => {
-        const cookies = setCookie.parse(res, {
-          decodeValues: true,
-        })
-        if (err) return token("token=")
-        token("token=" + cookies[0].value + ";")
+        if (!res.body.token) return token("")
+        token(res.body.token)
       })
   }
 
@@ -52,7 +49,7 @@ class LoginHelper {
     if (!this.id_user) return done()
     this.request
       .delete(`/user/${this.id_user}`)
-      .set("Cookie", cookies)
+      .set("Authorization", cookies)
       .end((err, res) => {
         if (err) return done(err)
         done()

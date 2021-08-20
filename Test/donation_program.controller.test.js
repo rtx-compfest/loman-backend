@@ -29,7 +29,7 @@ describe("Donation program Controller", () => {
   })
 
   it("should can show donation program", async () => {
-    const res = await agent.get(subUrl).set("Cookie", cookiesFundraiser)
+    const res = await agent.get(subUrl).set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -38,7 +38,7 @@ describe("Donation program Controller", () => {
   it("should can post donation program", async () => {
     const res = await agent
       .post(subUrl)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation")
       .field("max_date", "2021-09-01")
@@ -56,7 +56,7 @@ describe("Donation program Controller", () => {
   it("should can update donation program", async () => {
     const res = await agent
       .post(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation Updated")
       .field("max_date", "2021-09-01")
@@ -72,7 +72,7 @@ describe("Donation program Controller", () => {
   it("should can update donation program without image", async () => {
     const res = await agent
       .post(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation Updated")
       .field("max_date", "2021-09-01")
@@ -88,14 +88,14 @@ describe("Donation program Controller", () => {
   it("should can show donation program selected found", async () => {
     const res = await agent
       .get(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookiesAdmin)
+      .set("Authorization", cookiesAdmin)
     expect(res.status).to.equal(200)
   })
 
   it("should can verify donation program ", async () => {
     const res = await agent
       .post(`${subUrl}/verify/${idTemp}`)
-      .set("Cookie", cookiesAdmin)
+      .set("Authorization", cookiesAdmin)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -104,7 +104,7 @@ describe("Donation program Controller", () => {
   it("should can reject donation program ", async () => {
     const res = await agent
       .post(`${subUrl}/reject/${idTemp}`)
-      .set("Cookie", cookiesAdmin)
+      .set("Authorization", cookiesAdmin)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -113,7 +113,7 @@ describe("Donation program Controller", () => {
   it("should can delete donation program ", async () => {
     const res = await agent
       .delete(`${subUrl}/${idTemp}`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -122,7 +122,7 @@ describe("Donation program Controller", () => {
   it("should can show donation program by fundraiser", async () => {
     const res = await agent
       .get(`${subUrl}/fundraiser/0`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -131,7 +131,7 @@ describe("Donation program Controller", () => {
   it("should can show donation program by donor", async () => {
     const res = await agent
       .get(`${subUrl}/donor/0`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)

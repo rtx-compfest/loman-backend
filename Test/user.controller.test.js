@@ -39,7 +39,7 @@ describe("User Controller", () => {
   })
 
   it("should can show users", async () => {
-    const res = await agent.get(subUrl).set("Cookie", cookiesFundraiser)
+    const res = await agent.get(subUrl).set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -48,7 +48,7 @@ describe("User Controller", () => {
   it("should can show donor", async () => {
     const res = await agent
       .get(`${subUrl}/donor`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -57,7 +57,7 @@ describe("User Controller", () => {
   it("should can show fundraiser not validated", async () => {
     const res = await agent
       .get(`${subUrl}/fundraiser?status=0`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -66,7 +66,7 @@ describe("User Controller", () => {
   it("should can show fundraiser  validated", async () => {
     const res = await agent
       .get(`${subUrl}/fundraiser?status=1`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -75,7 +75,7 @@ describe("User Controller", () => {
   it("should can show fundraiser rejected", async () => {
     const res = await agent
       .get(`${subUrl}/fundraiser?status=2`)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
@@ -84,7 +84,7 @@ describe("User Controller", () => {
   it("should can show user selected", async () => {
     const res = await agent
       .get(`${subUrl}/` + loginFundraiser.id_user)
-      .set("Cookie", cookiesFundraiser)
+      .set("Authorization", cookiesFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -93,7 +93,7 @@ describe("User Controller", () => {
   it("should can verify fundraiser ", async () => {
     const res = await agent
       .post(`${subUrl}/verify/${loginFundraiser.id_user}`)
-      .set("Cookie", cookiesAdmin)
+      .set("Authorization", cookiesAdmin)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -102,7 +102,7 @@ describe("User Controller", () => {
   it("should can reject fundraiser ", async () => {
     const res = await agent
       .post(`${subUrl}/reject/${loginFundraiser.id_user}`)
-      .set("Cookie", cookiesAdmin)
+      .set("Authorization", cookiesAdmin)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)

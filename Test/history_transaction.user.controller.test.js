@@ -39,7 +39,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can post donation program", async () => {
     const res = await agent
       .post("/donation_program")
-      .set("Cookie", cookies)
+      .set("Authorization", cookies)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation")
       .field("max_date", "2021-09-01")
@@ -57,7 +57,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can donate program", async () => {
     const res = await agent
       .post("/wallet/donate/" + idTempDonation)
-      .set("Cookie", cookiesDonor)
+      .set("Authorization", cookiesDonor)
       .send(body)
     await db.historyTransaction.remove(res.body.data.id)
     expect(res.body).to.have.property("data")
@@ -68,7 +68,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can topup", async () => {
     const res = await agent
       .post("/wallet/topup/")
-      .set("Cookie", cookiesDonor)
+      .set("Authorization", cookiesDonor)
       .send(body)
     await db.historyTransaction.remove(res.body.data.id)
     expect(res.body).to.have.property("data")
@@ -79,7 +79,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can delete donation program ", async () => {
     const res = await agent
       .delete(`/donation_program/${idTempDonation}`)
-      .set("Cookie", cookies)
+      .set("Authorization", cookies)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)

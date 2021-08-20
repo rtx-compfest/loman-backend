@@ -74,6 +74,16 @@ class Users {
     )
   }
 
+  async findByEmail(email) {
+    return this.db.one(
+      "select * from ${tableName:name} WHERE email=${email}",
+      {
+        tableName: this.tableName,
+        email: email,
+      }
+    )
+  }
+
   async find(id) {
     return this.db.one("select * from ${tableName:name} WHERE id=${id}", {
       tableName: this.viewName,

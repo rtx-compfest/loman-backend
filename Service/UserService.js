@@ -58,11 +58,14 @@ class UserService {
   }
   async register(data) {
     try {
-      const { email, status_user, id } = await db.users.add(data)
-      return {
-        email,
-        status_user,
-        id,
+      const dataFound = await db.users.findByEmail(data.email)
+      if(!dataFound){
+        const { email, status_user, id } = await db.users.add(data)
+        return {
+          email,
+          status_user,
+          id,
+        }
       }
     } catch (e) {
       return null

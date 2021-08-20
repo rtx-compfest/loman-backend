@@ -56,6 +56,14 @@ class WalletService {
     }
   }
 
+  async getWithdrawRequest(status) {
+    try {
+      return await db.historyTransaction.findByStatus(status)
+    } catch (e) {
+      return null
+    }
+  }
+
   async verify(id) {
     try {
       const { credit, donation_id } = await db.historyTransaction.find(id)

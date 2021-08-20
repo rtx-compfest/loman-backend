@@ -56,7 +56,7 @@ class HistoryTransaction {
 
   async findByStatus(status, sort = "ASC") {
     return this.db.any(
-      "SELECT * FROM ${tableName:name} where status_transaction = ${status} and donation_name ILIKE '%${nama:value}%' ORDER BY ${orderBy:name} " +
+      "SELECT * FROM ${tableName:name} where status_transaction = ${status}" +
         sort,
       {
         status: status,

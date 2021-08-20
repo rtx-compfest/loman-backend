@@ -65,14 +65,14 @@ class DonationProgram {
 
   async findByStatus(status, sort = "ASC") {
     return this.db.any(
-      "SELECT * FROM ${tableName:name} where status_transaction = ${status} and donation_name ILIKE '%${nama:value}%' ORDER BY ${orderBy:name} " +
+      "SELECT * FROM ${tableName:name} where status = ${status}" +
         sort,
       {
         status: status,
       }
     )
   }
-  
+
   async findByFundanaiser(id, nama = "", orderBy = "id", sort = "ASC") {
     return this.db.any(
       "SELECT * FROM ${tableName:name} where user_id = ${id} and donation_name ILIKE '%${nama:value}%' ORDER BY ${orderBy:name} " +

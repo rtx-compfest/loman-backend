@@ -46,6 +46,14 @@ class DonationProgramService {
     }
   }
 
+  async getByStatus(status) {
+    try {
+      return await db.donationProgram.findByStatus(status)
+    } catch (e) {
+      return null
+    }
+  }
+
   async add(data) {
     data.status = 0
 

@@ -10,8 +10,8 @@ const loginHelper = new LoginHelper(agent, "ADMIN")
 const loginFundraiser = new LoginHelper(agent, "FUNDRAISER")
 const fs = require("fs")
 
-let cookies
-let cookiesFundraiser
+let tokenAdmin
+let tokenFundraiser
 
 let idTempDonation = ""
 let idTempTransaction = ""
@@ -25,9 +25,9 @@ const tempFile = fs.readFileSync(
 describe("History Trasaction Fundraiser Controller", () => {
   before(function (done) {
     loginHelper.initAccount((token) => {
-      cookies = token
+      tokenAdmin = token
       loginFundraiser.initAccount((token) => {
-        cookiesFundraiser = token
+        tokenFundraiser = token
         done()
       })
     })
@@ -36,7 +36,7 @@ describe("History Trasaction Fundraiser Controller", () => {
   it("should can post donation program", async () => {
     const res = await agent
       .post(`/donation_program`)
-      .set("Authorization", cookiesFundraiser)
+      .set("Authorization", tokenFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation")
       .field("max_date", "2021-09-01")
@@ -60,7 +60,7 @@ describe("History Trasaction Fundraiser Controller", () => {
     const res = await agent
       .post(`/wallet/withdraw/${idTempDonation}`)
       .send(dataWithdraw)
-      .set("Authorization", cookiesFundraiser)
+      .set("Authorization", tokenFundraiser)
     idTempTransaction = res.body.data.id
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
@@ -70,7 +70,7 @@ describe("History Trasaction Fundraiser Controller", () => {
   it("should can verify donation program ", async () => {
     const res = await agent
       .post(`/wallet/verify/${idTempTransaction}`)
-      .set("Authorization", cookies)
+      .set("Authorization", tokenAdmin)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -79,7 +79,7 @@ describe("History Trasaction Fundraiser Controller", () => {
   it("should can reject donation program ", async () => {
     const res = await agent
       .post(`/wallet/reject/${idTempTransaction}`)
-      .set("Authorization", cookies)
+      .set("Authorization", tokenAdmin)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -89,7 +89,7 @@ describe("History Trasaction Fundraiser Controller", () => {
     await db.historyTransaction.remove(idTempTransaction)
     const res = await agent
       .delete(`/donation_program/${idTempDonation}`)
-      .set("Authorization", cookiesFundraiser)
+      .set("Authorization", tokenFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -97,7 +97,7 @@ describe("History Trasaction Fundraiser Controller", () => {
 
   after(function (done) {
     loginHelper.removeTestAccount(() => {
-      loginFundraiser.removeTestAccount(done, cookies)
-    }, cookies)
+      loginFundraiser.removeTestAccount(done, tokenAdmin)
+    }, tokenAdmin)
   })
 })

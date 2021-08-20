@@ -40,16 +40,16 @@ class LoginHelper {
       .post("/user/login")
       .send(this.dataSample)
       .end((err, res) => {
-        if (!res.body.token) return token("")
+        if (res.body.token == undefined) return token("")
         token(res.body.token)
       })
   }
 
-  removeTestAccount(done, cookies) {
+  removeTestAccount(done, token) {
     if (!this.id_user) return done()
     this.request
       .delete(`/user/${this.id_user}`)
-      .set("Authorization", cookies)
+      .set("Authorization", token)
       .end((err, res) => {
         if (err) return done(err)
         done()

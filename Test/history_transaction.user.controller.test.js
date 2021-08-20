@@ -10,8 +10,8 @@ const loginHelper = new LoginHelper(agent, "FUNDRAISER")
 const loginUser = new LoginHelper(agent, "DONOR")
 const fs = require("fs")
 
-let cookies
-let cookiesDonor
+let tokenFundraiser
+let tokenDonor
 
 let idTempDonation = ""
 
@@ -28,9 +28,9 @@ const body = {
 describe("History Trasaction Donor Controller", () => {
   before(function (done) {
     loginHelper.initAccount((token) => {
-      cookies = token
+      tokenFundraiser = token
       loginUser.initAccount((token) => {
-        cookiesDonor = token
+        tokenDonor = token
         done()
       })
     })
@@ -39,7 +39,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can post donation program", async () => {
     const res = await agent
       .post("/donation_program")
-      .set("Authorization", cookies)
+      .set("Authorization", tokenFundraiser)
       .set("Content-Type", "application/x-www-form-urlencoded")
       .field("donation_name", "Test Donation")
       .field("max_date", "2021-09-01")
@@ -57,7 +57,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can donate program", async () => {
     const res = await agent
       .post("/wallet/donate/" + idTempDonation)
-      .set("Authorization", cookiesDonor)
+      .set("Authorization", tokenDonor)
       .send(body)
     await db.historyTransaction.remove(res.body.data.id)
     expect(res.body).to.have.property("data")
@@ -68,7 +68,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can topup", async () => {
     const res = await agent
       .post("/wallet/topup/")
-      .set("Authorization", cookiesDonor)
+      .set("Authorization", tokenDonor)
       .send(body)
     await db.historyTransaction.remove(res.body.data.id)
     expect(res.body).to.have.property("data")
@@ -79,7 +79,7 @@ describe("History Trasaction Donor Controller", () => {
   it("should can delete donation program ", async () => {
     const res = await agent
       .delete(`/donation_program/${idTempDonation}`)
-      .set("Authorization", cookies)
+      .set("Authorization", tokenFundraiser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -87,7 +87,7 @@ describe("History Trasaction Donor Controller", () => {
 
   after(function (done) {
     loginHelper.removeTestAccount(() => {
-      loginUser.removeTestAccount(done, cookies)
-    }, cookies)
+      loginUser.removeTestAccount(done, tokenFundraiser)
+    }, tokenFundraiser)
   })
 })

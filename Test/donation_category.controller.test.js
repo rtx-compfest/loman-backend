@@ -8,31 +8,31 @@ chai.use(chaiHttp)
 const agent = chai.request.agent(server)
 const loginHelper = new LoginHelper(agent)
 
-let cookies
+let tokenUser
 const subUrl = "/donation_category"
 describe("Donation category Controller", () => {
   before(function (done) {
     loginHelper.initAccount((token) => {
-      cookies = token
+      tokenUser = token
       done()
     })
   })
 
   it("should can show donation category", async () => {
-    const res = await agent.get(subUrl).set("Authorization", cookies)
+    const res = await agent.get(subUrl).set("Authorization", tokenUser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("array")
     expect(res.status).to.equal(200)
   })
 
   it("should can show donation category selected", async () => {
-    const res = await agent.get(`${subUrl}/1`).set("Authorization", cookies)
+    const res = await agent.get(`${subUrl}/1`).set("Authorization", tokenUser)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
   })
 
   after(function (done) {
-    loginHelper.removeTestAccount(done, cookies)
+    loginHelper.removeTestAccount(done, tokenUser)
   })
 })

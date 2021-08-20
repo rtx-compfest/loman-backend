@@ -17,8 +17,11 @@ function generate(data) {
 
 function verify(req, res, next) {
   try {
-    const cookie = req.signedCookies
-    const decoded = jwt.verify(cookie.token, key)
+    let token = req.signedCookies?.token
+    if (!token) {
+      token = req.headers.authorization
+    }
+    const decoded = jwt.verify(token, key)
     if (decoded.project == projectName) {
       req.user = decoded
       next()

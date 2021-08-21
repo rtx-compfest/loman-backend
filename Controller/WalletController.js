@@ -3,6 +3,7 @@ const {
   AdminChecker,
   DonorChecker,
   FundraiserChecker,
+  NonDonorChecker
 } = require("../Middleware")
 const { WalletService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
@@ -69,7 +70,7 @@ router.post(
   }
 )
 
-router.get("/withdraw", async function(req,res,next){
+router.get("/withdraw", NonDonorChecker, async function(req,res,next){
   const data = await walletService.getWithdrawRequest(req.query.status)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({

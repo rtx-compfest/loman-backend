@@ -4,6 +4,7 @@ const multer = require("multer")
 const { DonationProgramService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")
 const { FundraiserChecker, AdminChecker } = require("../Middleware")
+const cors = require('cors')
 
 const router = express.Router()
 
@@ -49,8 +50,13 @@ router.get("/:id", async function (req, res, next) {
   })
 })
 
+const corsOptions = {
+  origin: "https://loman-frontend.vercel.app",
+  optionsSuccessStatus: 200
+}
 router.post(
   "/",
+  cors(corsOptions),
   uploadImage.single("photos"),
   FundraiserChecker,
   async function (req, res, next) {

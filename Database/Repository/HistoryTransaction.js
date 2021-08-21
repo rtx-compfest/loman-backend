@@ -1,10 +1,12 @@
 const FilterBody = require("../../Util/FilterBody")
 const FilterUpdate = require("../../Util/FilterUpdate")
+const FilterWhere = require("../../Util/FilterWhere")
 class HistoryTransaction {
   constructor(db, pgp) {
     this.db = db
     this.pgp = pgp
     this.tableName = "history_transaction"
+    this.viewName = "view_transaction"
     this.allowedColumns = [
       "transaction_date",
       "debit",
@@ -59,11 +61,20 @@ class HistoryTransaction {
     )
   }
 
+  async findAll(condition) {
+    condition = new FilterWhere(condition, this.pgp, this.allowedColumns)
+
+    return this.db.any("SELECT * from  public.$1:name  WHERE $2", [
+      this.viewName,
+      condition,
+    ])
+  }
+
   async all(orderBy = "id", sort = "ASC") {
     return this.db.any(
       "SELECT * FROM ${tableName:name} ORDER BY ${orderBy:name} " + sort,
       {
-        tableName: this.tableName,
+        tableName: this.viewName,
         orderBy: orderBy,
         sort: sort,
       }

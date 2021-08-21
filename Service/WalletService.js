@@ -6,6 +6,38 @@ class WalletService {
     this.now = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
   }
 
+  async getAll() {
+    try {
+      return db.historyTransaction.all()
+    } catch (e) {
+      return null
+    }
+  }
+
+  async getRequest() {
+    try {
+      return db.historyTransaction.findAll({ status_transaction: 1 })
+    } catch (e) {
+      return null
+    }
+  }
+
+  async getWithdrawByUser(userId) {
+    try {
+      return db.historyTransaction.findAll({ user_id: userId })
+    } catch (error) {
+      return null
+    }
+  }
+
+  async getWithdrawByDonationProgram(programId) {
+    try {
+      return db.historyTransaction.findAll({ donation_id: programId })
+    } catch (error) {
+      return null
+    }
+  }
+
   async topUp(id, data) {
     const body = {
       transaction_date: this.now,

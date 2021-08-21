@@ -9,7 +9,49 @@ const { ErrorHandler } = require("../Util/ErrorHandler")
 
 const router = express.Router()
 const walletService = new WalletService()
+
+router.get("/", async function (req, res, next) {
+  const data = await walletService.getAll()
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
+  res.status(200).json({
+    data: data,
+    status: true,
+  })
+})
+
+router.get("/request", async function (req, res, next) {
+  const data = await walletService.getRequest()
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
+  res.status(200).json({
+    data: data,
+    status: true,
+  })
+})
+
+router.get("/user/:userid", AdminChecker, async function (req, res, next) {
+  const data = await walletService.getWithdrawByUser(req.params.userid)
+  if (!data) return next(new ErrorHandler(404, "Data is not found"))
+  res.status(200).json({
+    data: data,
+    status: true,
+  })
+})
+
+router.get(
+  "/donation_program/:id",
+  AdminChecker,
+  async function (req, res, next) {
+    const data = await walletService.getWithdrawByDonationProgram(req.params.id)
+    if (!data) return next(new ErrorHandler(404, "Data is not found"))
+    res.status(200).json({
+      data: data,
+      status: true,
+    })
+  }
+)
+
 // Topup wallet
+
 router.post("/topup", DonorChecker, async function (req, res, next) {
   const data = await walletService.topUp(req.user.userId, req.body)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
@@ -69,16 +111,15 @@ router.post(
   }
 )
 
-router.get("/withdraw", AdminChecker, async function(req,res,next){
+router.get("/withdraw", AdminChecker, async function (req, res, next) {
   const data = await walletService.getWithdrawRequest(req.query.status)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({
-      message: "Data found",
-      data: data,
-      status: true,
-    })
-  }
-)
+    message: "Data found",
+    data: data,
+    status: true,
+  })
+})
 
 // Admin verify wd request
 router.post("/verify/:id", AdminChecker, async function (req, res, next) {

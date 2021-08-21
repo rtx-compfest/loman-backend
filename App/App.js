@@ -15,11 +15,10 @@ const session = require("express-session")
 app.use(timeout("20s"))
 app.use(cmpression())
 
-app.options(
-  "*",
+app.use(
   Cors({
     credentials: true,
-    origin: (origin, callback) => callback(null, true),
+    origin: "*",
   })
 )
 

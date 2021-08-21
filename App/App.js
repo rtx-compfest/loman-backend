@@ -25,7 +25,7 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie: {
-      sameSite: "none", // must be 'none' to enable cross-site delivery
+      sameSite: "none",
       secure: true,
     },
   })

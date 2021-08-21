@@ -39,10 +39,14 @@ class DonationProgram {
   }
 
   async remove(id) {
-    return this.db.one("DELETE FROM $1:name WHERE id = $2 RETURNING * ", [
-      this.tableName,
-      id,
-    ])
+    try {
+      return this.db.oneOrNone(
+        "DELETE FROM $1:name WHERE id = $2 RETURNING * ",
+        [this.tableName, id]
+      )
+    } catch (error) {
+      return null
+    }
   }
 
   async find(id) {
@@ -65,8 +69,7 @@ class DonationProgram {
 
   async findByStatus(status, sort = "ASC") {
     return this.db.any(
-      "SELECT * FROM ${tableName:name} where status = ${status}" +
-        sort,
+      "SELECT * FROM ${tableName:name} where status = ${status}" + sort,
       {
         status: status,
       }

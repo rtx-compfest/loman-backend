@@ -77,6 +77,8 @@ router.post(
       req.body
     )
     if (!data) return next(new ErrorHandler(404, "Data is not found"))
+    if (data.limitAmount)
+      return next(new ErrorHandler(404, "Amount is unficient"))
     res.status(200).json({
       message: "Donation successful",
       data: {

@@ -14,7 +14,7 @@ let tokenFundraiser
 let tokenDonor
 
 let idTempDonation = ""
-
+let idTempTransaction = []
 const path = require("path")
 const { db } = require("../Database")
 const tempFile = fs.readFileSync(
@@ -54,29 +54,72 @@ describe("History Trasaction Donor Controller", () => {
     expect(res.status).to.equal(200)
   })
 
+  it("should can topup", async () => {
+    const res = await agent
+      .post("/wallet/topup/")
+      .set("Authorization", tokenDonor)
+      .send(body)
+    idTempTransaction.push(res.body.data.id)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should can amount user is increase", async () => {
+    const res = await agent
+      .get(`/user/${loginUser.id_user}`)
+      .set("Authorization", tokenDonor)
+
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.body.data.amount).equal(body.amount)
+    expect(res.status).to.equal(200)
+  })
+
   it("should can donate program", async () => {
     const res = await agent
       .post("/wallet/donate/" + idTempDonation)
       .set("Authorization", tokenDonor)
       .send(body)
 
-    await db.historyTransaction.remove(res.body.data.credit_id)
-    await db.historyTransaction.remove(res.body.data.debit_id)
+    idTempTransaction.push(res.body.data.credit_id)
+    idTempTransaction.push(res.body.data.debit_id)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
   })
 
-  it("should can topup", async () => {
+  it("should can amount user is descrease", async () => {
     const res = await agent
-      .post("/wallet/topup/")
+      .get(`/user/${loginUser.id_user}`)
       .set("Authorization", tokenDonor)
-      .send(body)
 
-    await db.historyTransaction.remove(res.body.data.id)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
+    expect(res.body.data.amount).equal(0)
     expect(res.status).to.equal(200)
+  })
+
+  it("should can amount donation program is increase", async () => {
+    const res = await agent
+      .get(`/donation_program/${idTempDonation}`)
+      .set("Authorization", tokenDonor)
+    await idTempTransaction.forEach(async (id) => {
+      const data = await db.historyTransaction.remove(id)
+    })
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("object")
+    expect(res.body.data.amount).equal(0)
+    expect(res.status).to.equal(200)
+  })
+
+  it("should cannot donate program cause amount is unfficient", async () => {
+    const res = await agent
+      .post("/wallet/donate/" + idTempDonation)
+      .set("Authorization", tokenDonor)
+      .send(body)
+    expect(res.body).to.have.property("status")
+    expect(res.status).to.equal(404)
   })
 
   it("should can delete donation program ", async () => {

@@ -56,6 +56,8 @@ class WalletService {
   }
 
   async donate(id, donation_id, data) {
+    const { amount } = await db.users.find(id)
+    if (amount < data.amount) return { limitAmount: true }
     const { user_id } = await db.donationProgram.find(donation_id)
     const body = {
       transaction_date: this.now,

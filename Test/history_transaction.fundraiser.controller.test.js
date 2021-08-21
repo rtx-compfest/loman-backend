@@ -67,6 +67,48 @@ describe("History Trasaction Fundraiser Controller", () => {
     expect(res.status).to.equal(200)
   })
 
+  it("should cannot withdraw donation program cause amount unfisient", async () => {
+    const dataWithdraw = {
+      amount: 1000,
+      notes: "-",
+      isVisible: 1,
+    }
+    const res = await agent
+      .post(`/wallet/withdraw/${idTempDonation}`)
+      .send(dataWithdraw)
+      .set("Authorization", tokenFundraiser)
+
+    expect(res.body).to.have.property("status")
+    expect(res.status).to.equal(404)
+  })
+
+  it("should show all request wd", async () => {
+    const res = await agent
+      .get(`/wallet/request`)
+      .set("Authorization", tokenAdmin)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("array")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should show transaction donation program", async () => {
+    const res = await agent
+      .get(`/wallet/donation_program/${idTempDonation}`)
+      .set("Authorization", tokenAdmin)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("array")
+    expect(res.status).to.equal(200)
+  })
+
+  it("should show transaction user", async () => {
+    const res = await agent
+      .get(`/wallet/user/${loginFundraiser.id_user}`)
+      .set("Authorization", tokenAdmin)
+    expect(res.body).to.have.property("data")
+    expect(res.body.data).to.be.an("array")
+    expect(res.status).to.equal(200)
+  })
+
   it("should can verify donation program ", async () => {
     const res = await agent
       .post(`/wallet/verify/${idTempTransaction}`)

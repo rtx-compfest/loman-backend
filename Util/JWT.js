@@ -17,10 +17,10 @@ function generate(data) {
 
 function verify(req, res, next) {
   try {
-    let token = req.signedCookies?.token
-    if (!token) {
-      token = req.headers.authorization
-    }
+    let token = req.headers.authorization
+    // if (!token) {
+    //   token
+    // }
     const decoded = jwt.verify(token, key)
     if (decoded.project == projectName) {
       req.user = decoded

@@ -12,7 +12,8 @@ const { handleError } = require("../Util/ErrorHandler")
 const session = require("express-session")
 
 //Timeout
-app.use(timeout("60s"))
+
+// app.use(timeout("60s"))
 app.use(cmpression())
 app.options("*", Cors({ origin: true, credentials: true }))
 // app.use()

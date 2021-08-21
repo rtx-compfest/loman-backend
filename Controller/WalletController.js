@@ -69,7 +69,7 @@ router.post(
   }
 )
 
-router.get("/withdraw", AdminChecker, async function(req,res,next){
+router.get("/withdraw", async function(req,res,next){
   const data = await walletService.getWithdrawRequest(req.query.status)
   if (!data) return next(new ErrorHandler(404, "Data is not found"))
   res.status(200).json({

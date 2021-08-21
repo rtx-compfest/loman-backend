@@ -18,11 +18,6 @@ class HistoryTransaction {
 
   async add(values) {
     values = FilterBody(values, this.allowedColumns)
-    if (values["credit"] === 0) {
-      values["status_transaction"] = 1
-    } else {
-      values["status_transaction"] = 0
-    }
     return this.db.one(
       "INSERT INTO public." +
         this.tableName +

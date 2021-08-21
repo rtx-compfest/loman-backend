@@ -14,6 +14,7 @@ class WalletService {
       user_id: id,
       donation_id: null,
       notes: data.notes,
+      status_transaction: 1,
     }
     try {
       return await db.historyTransaction.add(body)
@@ -30,6 +31,7 @@ class WalletService {
       user_id: id,
       donation_id: donation_id,
       notes: data.notes,
+      status_transaction: 1,
     }
     try {
       return await db.historyTransaction.add(body)
@@ -46,6 +48,7 @@ class WalletService {
       user_id: id,
       donation_id: donation_id,
       notes: data.notes,
+      status_transaction: 0,
     }
     try {
       const { amount } = await db.donationProgram.find(donation_id)

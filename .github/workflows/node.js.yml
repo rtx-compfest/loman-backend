@@ -32,11 +32,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Merge staging -> uat
-        uses: devmasx/merge-branch@v1.3.1
-        with:
-          type: now
-          from_branch: staging
-          target_branch: main
-          github_token: ${{ github.token }}
+      - name: git-checkout
+        uses: actions/checkout@v2
+
+      - name: Push
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: main # The branch name where you want to push the assets
+          FOLDER: main # The directory where your assets are generated
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
+          MESSAGE: "Main : ({sha}) {msg}" # The commit message

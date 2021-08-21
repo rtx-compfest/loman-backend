@@ -39,4 +39,4 @@ jobs:
           type: now
           from_branch: staging
           target_branch: main
-          github_token: ${{ github.token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}

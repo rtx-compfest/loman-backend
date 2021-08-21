@@ -32,10 +32,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Push to built branch
-        uses: Automattic/action-commit-to-branch@master
+      - uses: actions/checkout@master
+      - name: Merge staging -> uat
+        uses: devmasx/merge-branch@v1.3.1
         with:
-          branch: "main"
-          commit_message: "Build master"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required
+          type: now
+          from_branch: staging
+          target_branch: main
+          github_token: ${{ github.token }}

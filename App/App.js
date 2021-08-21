@@ -12,10 +12,16 @@ const { handleError } = require("../Util/ErrorHandler")
 const session = require("express-session")
 
 //Timeout
-app.use(timeout("10s"))
+app.use(timeout("20s"))
 app.use(cmpression())
 
-app.use(Cors({ origin: true, credentials: true }))
+app.options(
+  "*",
+  Cors({
+    credentials: true,
+    origin: (origin, callback) => callback(null, true),
+  })
+)
 
 app.set("trust proxy", 1)
 app.use(

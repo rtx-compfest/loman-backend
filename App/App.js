@@ -14,13 +14,8 @@ const session = require("express-session")
 //Timeout
 app.use(timeout("20s"))
 app.use(cmpression())
-
-app.use(
-  Cors({
-    credentials: true,
-    origin: "*",
-  })
-)
+app.options("*", Cors({ origin: true, credentials: true }))
+// app.use()
 
 app.set("trust proxy", 1)
 app.use(

@@ -59,7 +59,9 @@ describe("History Trasaction Donor Controller", () => {
       .post("/wallet/donate/" + idTempDonation)
       .set("Authorization", tokenDonor)
       .send(body)
-    await db.historyTransaction.remove(res.body.data.id)
+
+    await db.historyTransaction.remove(res.body.data.credit_id)
+    await db.historyTransaction.remove(res.body.data.debit_id)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")
     expect(res.status).to.equal(200)
@@ -70,6 +72,7 @@ describe("History Trasaction Donor Controller", () => {
       .post("/wallet/topup/")
       .set("Authorization", tokenDonor)
       .send(body)
+
     await db.historyTransaction.remove(res.body.data.id)
     expect(res.body).to.have.property("data")
     expect(res.body.data).to.be.an("object")

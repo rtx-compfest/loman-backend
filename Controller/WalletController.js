@@ -82,6 +82,8 @@ router.post(
       data: {
         status_transaction: data["status_transaction"],
         id: data["id"],
+        credit_id: data["credit_id"],
+        debit_id: data["debit_id"],
       },
       status: true,
     })

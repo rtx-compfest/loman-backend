@@ -56,17 +56,31 @@ class WalletService {
   }
 
   async donate(id, donation_id, data) {
+    const { user_id } = await db.donationProgram.find(donation_id)
     const body = {
       transaction_date: this.now,
-      debit: data.amount,
-      credit: 0,
+      debit: 0,
+      credit: data.amount,
       user_id: id,
       donation_id: donation_id,
       notes: data.notes,
       status_transaction: 1,
     }
+    const bodyData = {
+      transaction_date: this.now,
+      debit: data.amount,
+      credit: 0,
+      user_id: user_id,
+      donation_id: donation_id,
+      notes: data.notes,
+      status_transaction: 1,
+    }
     try {
-      return await db.historyTransaction.add(body)
+      const { id } = await db.historyTransaction.add(bodyData)
+      data = await db.historyTransaction.add(body)
+      data.credit_id = data.id
+      data.debit_id = id
+      return data
     } catch (e) {
       return null
     }

@@ -35,7 +35,9 @@ app.use(cookieParser(process.env.JWT_KEY))
 
 //Body Parser
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(
+  express.urlencoded({ extended: false, limit: "50mb", parameterLimit: 50000 })
+)
 
 // Read Upload file like image
 app.use(express.static(path.join(__dirname, "..", "public")))

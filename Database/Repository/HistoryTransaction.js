@@ -51,16 +51,6 @@ class HistoryTransaction {
     })
   }
 
-  async findByStatus(status, sort = "ASC") {
-    return this.db.any(
-      "SELECT * FROM ${tableName:name} where status_transaction = ${status}" +
-        sort,
-      {
-        status: status,
-      }
-    )
-  }
-
   async findAll(condition) {
     condition = new FilterWhere(condition, this.pgp, this.allowedColumns)
 

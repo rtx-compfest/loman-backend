@@ -40,17 +40,3 @@ jobs:
           from_branch: staging
           target_branch: main
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy Using ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd ../../var/www/loman/loman-backend
-            git pull origin main
-            git status
-            yarn install
-            pm2 reload Loman
-            pm2 restart Loman

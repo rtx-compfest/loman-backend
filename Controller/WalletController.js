@@ -3,7 +3,6 @@ const {
   AdminChecker,
   DonorChecker,
   FundraiserChecker,
-  NonDonorChecker,
 } = require("../Middleware")
 const { WalletService } = require("../Service")
 const { ErrorHandler } = require("../Util/ErrorHandler")

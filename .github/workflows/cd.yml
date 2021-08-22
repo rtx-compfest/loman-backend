@@ -2,7 +2,7 @@ name: cd
 
 on:
   workflow_run:
-    workflows: ["Staging test"]
+    workflows: ["Pull request CI"]
     types:
       - completed
 
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2          
+      - uses: actions/checkout@master          
       - name: Deploy Using ssh
         uses: appleboy/ssh-action@master
         with:

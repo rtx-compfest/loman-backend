@@ -30,13 +30,18 @@ jobs:
 
   notify:
     needs: build
+    name: Open PR to main
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Merge staging -> uat
-        uses: devmasx/merge-branch@v1.3.1
+      - uses: actions/checkout@v2
+        name: checkout
+
+      - uses: repo-sync/pull-request@v2
+        name: pull-request
         with:
-          type: now
-          from_branch: staging
-          target_branch: main
+          destination_branch: "main"
+          pr_title: "Pulling ${{ github.ref }} into main"
+          pr_body: "👑 *An automated PR*"
+          pr_reviewer: "kingdonb"
+          pr_draft: true
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -31,6 +31,7 @@ app.use(
   })
 )
 
+//add log
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 
@@ -50,5 +51,7 @@ app.use(AuthChecker)
 //Routing
 Route(app)
 
+//Handler error
 app.use(handleError)
+
 module.exports = app

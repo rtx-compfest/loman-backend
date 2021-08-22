@@ -134,6 +134,14 @@ class WalletService {
       return null
     }
   }
+
+  async remove(id) {
+    try {
+      return await db.historyTransaction.remove(id)
+    } catch (error) {
+      return null
+    }
+  }
 }
 
 module.exports = WalletService

@@ -1,10 +1,10 @@
 name: cd
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: ["Main test"]
+    types:
+      - completed
 
 jobs:
   cd:
@@ -12,7 +12,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
+      - name: Merge staging -> uat
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          from_branch: staging
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Deploy Using ssh
         uses: appleboy/ssh-action@master
         with:

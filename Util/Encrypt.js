@@ -10,15 +10,6 @@ function encrypt(text) {
   return encrypted.toString("hex")
 }
 
-function decrypt(text) {
-  const encryptedText = Buffer.from(text, "hex")
-  const decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iva)
-  let decrypted = decipher.update(encryptedText)
-  decrypted = Buffer.concat([decrypted, decipher.final()])
-  return decrypted.toString()
-}
-
 module.exports = {
   encrypt: encrypt,
-  decrypt: decrypt,
 }

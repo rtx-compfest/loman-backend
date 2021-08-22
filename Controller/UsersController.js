@@ -64,21 +64,12 @@ router.post("/login", async function (req, res, next) {
   const data = await userService.login(req.body)
   if (!data) return next(new ErrorHandler(404, "Account is not found"))
 
-  res
-    .cookie("token", data.token, {
-      expires: new Date(Date.now() + 3 * 24 * 60 * 60000),
-      httpOnly: false,
-      signed: true,
-      sameSite: "none",
-      secure: true,
-    })
-    .status(200)
-    .json({
-      message: "Login successful",
-      data: data.data,
-      token: data.token,
-      status: true,
-    })
+  res.status(200).json({
+    message: "Login successful",
+    data: data.data,
+    token: data.token,
+    status: true,
+  })
 })
 
 // Logout

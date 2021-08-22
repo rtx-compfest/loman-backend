@@ -51,5 +51,7 @@ app.use(AuthChecker)
 //Routing
 Route(app)
 
+//Handler error
 app.use(handleError)
+
 module.exports = app

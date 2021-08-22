@@ -1,13 +1,13 @@
 # This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Staging test
+name: CI CD
 
 on:
   push:
-    branches: [staging]
+    branches: [main]
   pull_request:
-    branches: [staging]
+    branches: [main]
 
 jobs:
   build:
@@ -30,18 +30,21 @@ jobs:
 
   notify:
     needs: build
-    name: Open PR to main
+    name: Deploy to vps
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        name: checkout
-
-      - uses: repo-sync/pull-request@v2
-        name: pull-request
+      - uses: actions/checkout@master          
+      - name: Deploy Using ssh
+        uses: appleboy/ssh-action@master
         with:
-          destination_branch: "main"
-          pr_title: "Pulling ${{ github.ref }} into main"
-          pr_body: "Do request pulling from staging to merge"
-          pr_reviewer: "BOT"
-          pr_draft: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ../../var/www/loman/loman-backend
+            git pull origin main
+            git status
+            yarn install
+            pm2 reload Loman
+            pm2 restart Loman

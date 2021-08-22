@@ -31,6 +31,7 @@ app.use(
   })
 )
 
+//add log
 app.use(morgan("tiny"))
 app.use(cookieParser(process.env.JWT_KEY))
 
